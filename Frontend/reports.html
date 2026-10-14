@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Reports | Smart Energy Management System</title>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7f8;
+    color: #071b2c;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+    height: 72px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+
+    background: linear-gradient(
+        90deg,
+        #006d3d,
+        #07834a
+    );
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.menu {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.logo {
+    width: 42px;
+    height: 42px;
+
+    border: 2px solid #8cff52;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+.system-name {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.admin {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.notification {
+    font-size: 21px;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    position: fixed;
+
+    top: 72px;
+    left: 0;
+    bottom: 0;
+
+    width: 250px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #061d2b,
+            #03151f
+        );
+
+    color: white;
+
+    padding-top: 24px;
+
+    z-index: 900;
+}
+
+.nav-item {
+    height: 59px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 17px;
+
+    padding: 0 25px;
+
+    color: #dce6ea;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+    background: rgba(0,255,120,.08);
+}
+
+.nav-item.active {
+    background:
+        linear-gradient(
+            90deg,
+            #078b4e,
+            #08a85c
+        );
+
+    border-left:
+        4px solid #8cff52;
+
+    color: white;
+}
+
+.nav-icon {
+    width: 25px;
+
+    text-align: center;
+
+    font-size: 19px;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main {
+    margin-left: 250px;
+
+    padding:
+        105px
+        32px
+        40px;
+
+    min-height: 100vh;
+}
+
+.page-heading {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 37px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   REPORT CONTROLS
+===================================================== */
+
+.report-controls {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.report-select,
+.report-date {
+    height: 42px;
+
+    min-width: 150px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid #d2dbe0;
+
+    border-radius: 7px;
+
+    background: white;
+
+    color: #172b3c;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+.report-date {
+    min-width: 145px;
+}
+
+.report-select:focus,
+.report-date:focus {
+    border-color: #078a4e;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(7,138,78,.08);
+}
+
+.generate-btn {
+    height: 42px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    padding:
+        0 17px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #078b4e,
+            #079956
+        );
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(7,138,78,.2);
+}
+
+
+/* =====================================================
+   CHART GRID
+===================================================== */
+
+.chart-grid {
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        .95fr;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   CHART CARD
+===================================================== */
+
+.chart-card {
+    background: white;
+
+    border:
+        1px solid #dfe5e8;
+
+    border-radius: 12px;
+
+    padding: 22px;
+
+    min-height: 410px;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,.035);
+}
+
+.chart-title {
+    font-size: 19px;
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.chart-container {
+    height: 325px;
+
+    position: relative;
+}
+
+
+/* =====================================================
+   PIE CHART AREA
+===================================================== */
+
+.pie-area {
+    height: 325px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 30px;
+}
+
+.pie-chart-container {
+    width: 260px;
+    height: 260px;
+
+    position: relative;
+}
+
+.device-legend {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.legend-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 14px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+}
+
+
+/* =====================================================
+   SUMMARY CARDS
+===================================================== */
+
+.summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+.summary-card {
+    background: white;
+
+    border:
+        1px solid #dfe5e8;
+
+    border-radius: 12px;
+
+    padding:
+        20px 22px;
+
+    min-height: 155px;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,.035);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+}
+
+.summary-top {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+.summary-icon {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+.energy-icon {
+    background: #e5f0ff;
+    color: #1976d2;
+}
+
+.cost-icon {
+    background: #fff3d9;
+    color: #e09a00;
+}
+
+.saving-icon {
+    background: #e0f5e9;
+    color: #078a4e;
+}
+
+.co2-icon {
+    background: #eee9ff;
+    color: #7254d8;
+}
+
+.summary-name {
+    font-size: 15px;
+
+    color: #263544;
+}
+
+.summary-value {
+    font-size: 30px;
+
+    font-weight: 600;
+
+    color: #071b2c;
+}
+
+.summary-value.green {
+    color: #078a4e;
+}
+
+.summary-unit {
+    font-size: 17px;
+
+    font-weight: 400;
+}
+
+
+/* =====================================================
+   REPORT STATUS
+===================================================== */
+
+.report-status {
+    display: none;
+
+    margin-top: 20px;
+
+    padding:
+        14px 18px;
+
+    background: #e7f8ee;
+
+    border:
+        1px solid #bce6cb;
+
+    color: #087b47;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.report-status.show {
+    display: block;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 1150px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+    }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+@media(max-width: 850px) {
+
+    .sidebar {
+        transform:
+            translateX(-100%);
+
+        transition: .3s;
+    }
+
+    .sidebar.open {
+        transform:
+            translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .page-heading {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 18px;
+    }
+
+}
+
+@media(max-width: 600px) {
+
+    .system-name {
+        display: none;
+    }
+
+    .report-controls {
+        width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+    .report-select,
+    .report-date,
+    .generate-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pie-area {
+        flex-direction: column;
+
+        height: auto;
+
+        padding-bottom: 20px;
+    }
+
+    .chart-card {
+        min-height: auto;
+    }
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    background: #071b2c;
+
+    color: white;
+
+    padding:
+        14px 20px;
+
+    border-radius: 8px;
+
+    opacity: 0;
+
+    transform:
+        translateY(30px);
+
+    transition: .3s;
+
+    z-index: 2000;
+}
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div
+            class="menu"
+            id="menuButton"
+        >
+            ☰
+        </div>
+
+        <div class="logo">
+            ⚡
+        </div>
+
+        <div class="system-name">
+            Smart Energy Management System
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="admin">
+            👤 Admin
+        </div>
+
+        <div class="notification">
+            ♧
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<nav
+    class="sidebar"
+    id="sidebar"
+>
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">⌂</span>
+        Dashboard
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">▦</span>
+        Rooms & Devices
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">◉</span>
+        Data Collection
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">✣</span>
+        AI Processing
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">♢</span>
+        Alerts
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item active"
+    >
+        <span class="nav-icon">▤</span>
+        Reports
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">⚙</span>
+        Settings
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+        <span class="nav-icon">⇥</span>
+        Logout
+    </a>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- PAGE HEADING -->
+
+    <div class="page-heading">
+
+        <h1 class="page-title">
+            Reports
+        </h1>
+
+
+        <div class="report-controls">
+
+            <select
+                class="report-select"
+                id="reportType"
+            >
+
+                <option value="daily">
+                    Daily Report
+                </option>
+
+                <option value="weekly">
+                    Weekly Report
+                </option>
+
+                <option value="monthly">
+                    Monthly Report
+                </option>
+
+                <option value="yearly">
+                    Yearly Report
+                </option>
+
+            </select>
+
+
+            <input
+                type="date"
+                class="report-date"
+                id="reportDate"
+                value="2024-05-24"
+            >
+
+
+            <button
+                class="generate-btn"
+                onclick="generateReport()"
+            >
+                ↗ Generate Report
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         CHARTS
+    ================================================== -->
+
+    <section class="chart-grid">
+
+
+        <!-- ENERGY CONSUMPTION -->
+
+        <div class="chart-card">
+
+            <h2 class="chart-title">
+                Energy Consumption (kWh)
+            </h2>
+
+
+            <div class="chart-container">
+
+                <canvas
+                    id="energyChart"
+                ></canvas>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ENERGY BY DEVICE -->
+
+        <div class="chart-card">
+
+            <h2 class="chart-title">
+                Energy by Device (kWh)
+            </h2>
+
+
+            <div class="pie-area">
+
+
+                <div class="pie-chart-container">
+
+                    <canvas
+                        id="deviceChart"
+                    ></canvas>
+
+                </div>
+
+
+                <div class="device-legend">
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot"
+                            style="
+                            background:#2476d8;
+                            "
+                        ></span>
+
+                        AC (40%)
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot"
+                            style="
+                            background:#62a4e3;
+                            "
+                        ></span>
+
+                        Lighting (25%)
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot"
+                            style="
+                            background:#f5a623;
+                            "
+                        ></span>
+
+                        Appliances (20%)
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span
+                            class="legend-dot"
+                            style="
+                            background:#7b68d9;
+                            "
+                        ></span>
+
+                        Others (15%)
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SUMMARY CARDS
+    ================================================== -->
+
+    <section class="summary-grid">
+
+
+        <!-- TOTAL ENERGY -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div
+                    class="
+                    summary-icon
+                    energy-icon
+                    "
+                >
+                    ⚡
+                </div>
+
+                <div class="summary-name">
+                    Total Energy
+                </div>
+
+            </div>
+
+
+            <div class="summary-value">
+
+                <span id="totalEnergy">
+                    28.45
+                </span>
+
+                <span class="summary-unit">
+                    kWh
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TOTAL COST -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div
+                    class="
+                    summary-icon
+                    cost-icon
+                    "
+                >
+                    ₹
+                </div>
+
+                <div class="summary-name">
+                    Total Cost
+                </div>
+
+            </div>
+
+
+            <div class="summary-value">
+
+                ₹
+                <span id="totalCost">
+                    85.35
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TOTAL SAVINGS -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div
+                    class="
+                    summary-icon
+                    saving-icon
+                    "
+                >
+                    🐷
+                </div>
+
+                <div class="summary-name">
+                    Total Savings
+                </div>
+
+            </div>
+
+
+            <div
+                class="
+                summary-value
+                green
+                "
+            >
+
+                ₹
+                <span id="totalSavings">
+                    23.40
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CO2 SAVED -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div
+                    class="
+                    summary-icon
+                    co2-icon
+                    "
+                >
+                    ♧
+                </div>
+
+                <div class="summary-name">
+                    CO₂ Saved
+                </div>
+
+            </div>
+
+
+            <div
+                class="
+                summary-value
+                green
+                "
+            >
+
+                <span id="co2Saved">
+                    12.5
+                </span>
+
+                <span class="summary-unit">
+                    kg
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- REPORT STATUS -->
+
+    <div
+        class="report-status"
+        id="reportStatus"
+    >
+        Report generated successfully.
+    </div>
+
+</main>
+
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    Report generated successfully
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   ENERGY CONSUMPTION DATA
+===================================================== */
+
+const energyLabels = [
+    "00:00",
+    "01:00",
+    "02:00",
+    "03:00",
+    "04:00",
+    "05:00",
+    "06:00",
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00"
+];
+
+
+const energyValues = [
+    6,
+    9,
+    12,
+    10,
+    13,
+    15,
+    17,
+    14,
+    10,
+    15,
+    14,
+    22,
+    19,
+    17,
+    21,
+    16,
+    14,
+    20,
+    23,
+    27,
+    24,
+    18,
+    15,
+    12
+];
+
+
+/* =====================================================
+   ENERGY BAR CHART
+===================================================== */
+
+const energyCanvas =
+    document.getElementById(
+        "energyChart"
+    );
+
+
+const energyChart =
+    new Chart(
+        energyCanvas,
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    energyLabels,
+
+                datasets: [
+
+                    {
+                        label:
+                            "Energy Consumption",
+
+                        data:
+                            energyValues,
+
+                        backgroundColor:
+                            "#2879d8",
+
+                        borderRadius: 2,
+
+                        borderSkipped: false
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label:
+                                function(context) {
+
+                                    return (
+                                        " " +
+                                        context.raw +
+                                        " kWh"
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+                            display: false
+                        },
+
+                        ticks: {
+
+                            maxRotation: 0,
+
+                            autoSkip: true,
+
+                            maxTicksLimit: 7
+
+                        }
+
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        suggestedMax: 30,
+
+                        ticks: {
+                            stepSize: 10
+                        },
+
+                        grid: {
+                            color: "#e4e9ec"
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+/* =====================================================
+   DEVICE PIE CHART
+===================================================== */
+
+const deviceCanvas =
+    document.getElementById(
+        "deviceChart"
+    );
+
+
+const deviceChart =
+    new Chart(
+        deviceCanvas,
+        {
+
+            type: "pie",
+
+            data: {
+
+                labels: [
+                    "AC",
+                    "Lighting",
+                    "Appliances",
+                    "Others"
+                ],
+
+                datasets: [
+
+                    {
+
+                        data: [
+                            40,
+                            25,
+                            20,
+                            15
+                        ],
+
+                        backgroundColor: [
+                            "#2476d8",
+                            "#62a4e3",
+                            "#f5a623",
+                            "#7b68d9"
+                        ],
+
+                        borderWidth: 2,
+
+                        borderColor:
+                            "#ffffff"
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label:
+                                function(context) {
+
+                                    return (
+                                        context.label +
+                                        ": " +
+                                        context.raw +
+                                        "%"
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+/* =====================================================
+   GENERATE REPORT
+===================================================== */
+
+function generateReport() {
+
+    const type =
+        document.getElementById(
+            "reportType"
+        ).value;
+
+
+    const date =
+        document.getElementById(
+            "reportDate"
+        ).value;
+
+
+    if (!date) {
+
+        showToast(
+            "Please select a date"
+        );
+
+        return;
+
+    }
+
+
+    const typeName =
+        document
+            .getElementById(
+                "reportType"
+            )
+            .options[
+                document
+                .getElementById(
+                    "reportType"
+                )
+                .selectedIndex
+            ]
+            .text;
+
+
+    const status =
+        document.getElementById(
+            "reportStatus"
+        );
+
+
+    status.textContent =
+        `${typeName} generated for ${formatDate(date)}.`;
+
+
+    status.classList.add(
+        "show"
+    );
+
+
+    showToast(
+        "Report generated successfully"
+    );
+
+
+    /* Demo dynamic values */
+
+    if (type === "daily") {
+
+        updateSummary(
+            "28.45",
+            "85.35",
+            "23.40",
+            "12.5"
+        );
+
+    }
+
+    else if (type === "weekly") {
+
+        updateSummary(
+            "184.72",
+            "554.16",
+            "86.40",
+            "81.2"
+        );
+
+    }
+
+    else if (type === "monthly") {
+
+        updateSummary(
+            "742.65",
+            "2227.95",
+            "326.80",
+            "327.4"
+        );
+
+    }
+
+    else {
+
+        updateSummary(
+            "8645.30",
+            "25935.90",
+            "4210.50",
+            "3815.7"
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   UPDATE SUMMARY
+===================================================== */
+
+function updateSummary(
+    energy,
+    cost,
+    savings,
+    co2
+) {
+
+    document.getElementById(
+        "totalEnergy"
+    ).textContent =
+        energy;
+
+
+    document.getElementById(
+        "totalCost"
+    ).textContent =
+        cost;
+
+
+    document.getElementById(
+        "totalSavings"
+    ).textContent =
+        savings;
+
+
+    document.getElementById(
+        "co2Saved"
+    ).textContent =
+        co2;
+
+}
+
+
+
+/* =====================================================
+   DATE FORMAT
+===================================================== */
+
+function formatDate(
+    dateString
+) {
+
+    const date =
+        new Date(
+            dateString +
+            "T00:00:00"
+        );
+
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(
+    message
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function() {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        2500
+    );
+
+}
+
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+document
+    .getElementById(
+        "menuButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById(
+                    "sidebar"
+                )
+                .classList.toggle(
+                    "open"
+                );
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

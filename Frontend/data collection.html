@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Data Collection - Smart Energy Management System</title>
+
+<!-- TensorFlow + COCO-SSD for person detection -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3"></script>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6f8;
+    color: #071b2c;
+}
+
+
+/* ================= HEADER ================= */
+
+.header {
+    height: 72px;
+    background: #087b47;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.menu {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+
+    border: 2px solid #8cff52;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 22px;
+}
+
+.system-name {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.admin {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    position: fixed;
+
+    top: 72px;
+    left: 0;
+    bottom: 0;
+
+    width: 248px;
+
+    background: #031d2a;
+
+    color: white;
+
+    padding-top: 25px;
+
+    z-index: 900;
+}
+
+.nav {
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    padding-left: 30px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 15px;
+}
+
+.nav:hover {
+    background: #063346;
+}
+
+.nav.active {
+    background: #08a85c;
+    border-left: 4px solid #8cff52;
+}
+
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 18px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main {
+    margin-left: 248px;
+
+    padding:
+        105px
+        32px
+        40px;
+}
+
+.page-title {
+    font-size: 36px;
+    margin-bottom: 28px;
+}
+
+
+/* ================= SENSOR CARDS ================= */
+
+.cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+.card {
+    background: white;
+
+    border: 1px solid #e0e5e8;
+
+    border-radius: 13px;
+
+    padding: 27px;
+
+    height: 156px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.04);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.card-icon {
+    float: right;
+    font-size: 30px;
+}
+
+.card-value {
+    margin-top: 34px;
+
+    font-size: 37px;
+    font-weight: 500;
+}
+
+.green {
+    color: #078a4e;
+}
+
+.blue {
+    color: #1d72dc;
+}
+
+.orange {
+    color: #f39a19;
+}
+
+.purple {
+    color: #7047d7;
+}
+
+.unit {
+    font-size: 17px;
+    color: #111;
+}
+
+
+/* ================= LOWER SECTION ================= */
+
+.lower {
+    display: grid;
+
+    grid-template-columns:
+        1.25fr 0.85fr;
+
+    gap: 20px;
+}
+
+
+/* ================= PANEL ================= */
+
+.panel {
+    background: white;
+
+    border: 1px solid #e0e5e8;
+
+    border-radius: 13px;
+
+    padding: 23px;
+
+    min-height: 470px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.04);
+}
+
+.panel-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.panel-title {
+    font-size: 23px;
+    font-weight: 700;
+}
+
+
+/* ================= LIVE STATUS ================= */
+
+.live {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    color: #078a4e;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.live-dot {
+    width: 14px;
+    height: 14px;
+
+    background: #0aa85d;
+
+    border-radius: 50%;
+
+    animation: pulse 1.3s infinite;
+}
+
+@keyframes pulse {
+
+    0% {
+        box-shadow: 0 0 0 0 rgba(10,168,93,.5);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(10,168,93,0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(10,168,93,0);
+    }
+}
+
+
+/* ================= SENSOR TABLE ================= */
+
+.table-box {
+    border: 1px solid #dfe5e8;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #edf2f5;
+}
+
+th {
+    text-align: left;
+
+    padding: 15px 18px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+td {
+    padding: 15px 18px;
+
+    border-top: 1px solid #e2e6e9;
+
+    font-size: 14px;
+}
+
+
+/* ================= PERSON COUNT ================= */
+
+.person-area {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    min-height: 360px;
+}
+
+.person-number {
+    width: 40%;
+
+    text-align: center;
+}
+
+.person-number strong {
+    display: block;
+
+    font-size: 92px;
+
+    line-height: 1;
+
+    font-weight: 500;
+
+    color: #079653;
+}
+
+.person-label {
+    margin-top: 18px;
+
+    font-size: 17px;
+}
+
+
+/* ================= CAMERA ================= */
+
+.camera-container {
+    width: 58%;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    background: #071820;
+
+    border: 1px solid #d8dde0;
+}
+
+.camera-view {
+    position: relative;
+
+    width: 100%;
+
+    height: 260px;
+
+    background: #071820;
+
+    overflow: hidden;
+}
+
+#video {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transform: scaleX(-1);
+}
+
+#canvas {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    transform: scaleX(-1);
+}
+
+.camera-message {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: white;
+
+    background: rgba(3,20,30,.88);
+
+    padding: 20px;
+
+    font-size: 14px;
+
+    z-index: 5;
+}
+
+.camera-message.hidden {
+    display: none;
+}
+
+
+/* ================= CAMERA BADGE ================= */
+
+.ai-badge {
+    position: absolute;
+
+    right: 10px;
+    top: 10px;
+
+    z-index: 10;
+
+    background: rgba(0,0,0,.65);
+
+    color: white;
+
+    border-radius: 20px;
+
+    padding: 7px 12px;
+
+    font-size: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+/* ================= CAMERA BUTTONS ================= */
+
+.camera-controls {
+    display: flex;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    background: #f5f7f8;
+}
+
+button {
+    flex: 1;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.start-btn {
+    background: #078a4e;
+    color: white;
+}
+
+.stop-btn {
+    background: #e8ecef;
+    color: #26323a;
+}
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width: 1200px) {
+
+    .cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .lower {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 850px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main {
+        margin-left: 210px;
+    }
+
+    .person-area {
+        flex-direction: column;
+    }
+
+    .person-number,
+    .camera-container {
+        width: 100%;
+    }
+}
+
+@media(max-width: 600px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 95px 15px 30px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div class="menu">
+            ☰
+        </div>
+
+        <div class="logo">
+            ⚡
+        </div>
+
+        <div class="system-name">
+            Smart Energy Management System
+        </div>
+
+    </div>
+
+    <div class="admin">
+        👤 Admin
+    </div>
+
+</header>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<nav class="sidebar">
+
+    <a class="nav" href="#">
+        <span class="nav-icon">⌂</span>
+        Dashboard
+    </a>
+
+    <a class="nav" href="#">
+        <span class="nav-icon">▦</span>
+        Rooms & Devices
+    </a>
+
+    <a class="nav active" href="#">
+        <span class="nav-icon">◉</span>
+        Data Collection
+    </a>
+
+    <a class="nav" href="#">
+        <span class="nav-icon">✣</span>
+        AI Processing
+    </a>
+
+    <a class="nav" href="#">
+        <span class="nav-icon">♢</span>
+        Alerts
+    </a>
+
+    <a class="nav" href="#">
+        <span class="nav-icon">▤</span>
+        Reports
+    </a>
+
+    <a class="nav" href="#">
+        <span class="nav-icon">⚙</span>
+        Settings
+    </a>
+
+    <a class="nav" href="#">
+        <span class="nav-icon">⇥</span>
+        Logout
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <h1 class="page-title">
+        Data Collection
+    </h1>
+
+
+    <!-- ================= SENSOR CARDS ================= -->
+
+    <section class="cards">
+
+        <div class="card">
+
+            <span class="card-title">
+                Voltage
+            </span>
+
+            <span class="card-icon green">
+                〽
+            </span>
+
+            <div class="card-value green">
+                <span id="voltage">
+                    229
+                </span>
+
+                <span class="unit">
+                    V
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-title">
+                Current
+            </span>
+
+            <span class="card-icon blue">
+                〽
+            </span>
+
+            <div class="card-value">
+                <span id="current">
+                    2.45
+                </span>
+
+                <span class="unit">
+                    A
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-title">
+                Power
+            </span>
+
+            <span class="card-icon orange">
+                ⚡
+            </span>
+
+            <div class="card-value">
+                <span id="power">
+                    563
+                </span>
+
+                <span class="unit">
+                    W
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-title">
+                Energy Today
+            </span>
+
+            <span class="card-icon purple">
+                ▥
+            </span>
+
+            <div class="card-value">
+                <span id="energy">
+                    12.41
+                </span>
+
+                <span class="unit">
+                    kWh
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LOWER SECTION ================= -->
+
+    <section class="lower">
+
+
+        <!-- ================= SENSOR DATA ================= -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h2 class="panel-title">
+                    Live Sensor Data
+                </h2>
+
+            </div>
+
+
+            <div class="table-box">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Voltage</td>
+                            <td id="tableVoltage">229</td>
+                            <td>V</td>
+                        </tr>
+
+                        <tr>
+                            <td>Current</td>
+                            <td id="tableCurrent">2.45</td>
+                            <td>A</td>
+                        </tr>
+
+                        <tr>
+                            <td>Power</td>
+                            <td id="tablePower">563</td>
+                            <td>W</td>
+                        </tr>
+
+                        <tr>
+                            <td>Energy</td>
+                            <td id="tableEnergy">12.41</td>
+                            <td>kWh</td>
+                        </tr>
+
+                        <tr>
+                            <td>Frequency</td>
+                            <td id="frequency">50.1</td>
+                            <td>Hz</td>
+                        </tr>
+
+                        <tr>
+                            <td>Timestamp</td>
+                            <td id="timestamp" colspan="2">
+                                --
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= LIVE PERSON DETECTION ================= -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h2 class="panel-title">
+                    Person Count (Live)
+                </h2>
+
+                <div class="live">
+
+                    <span class="live-dot"></span>
+
+                    Live
+
+                </div>
+
+            </div>
+
+
+            <div class="person-area">
+
+
+                <!-- PERSON COUNT -->
+
+                <div class="person-number">
+
+                    <strong id="personCount">
+                        0
+                    </strong>
+
+                    <div class="person-label">
+                        People in Room
+                    </div>
+
+                </div>
+
+
+                <!-- CAMERA -->
+
+                <div class="camera-container">
+
+                    <div class="camera-view">
+
+                        <video
+                            id="video"
+                            autoplay
+                            muted
+                            playsinline>
+                        </video>
+
+
+                        <canvas
+                            id="canvas">
+                        </canvas>
+
+
+                        <div
+                            id="cameraMessage"
+                            class="camera-message">
+
+                            Click
+                            <b>Start Camera</b>
+                            to begin live detection.
+
+                        </div>
+
+
+                        <div class="ai-badge">
+
+                            <span class="live-dot"></span>
+
+                            AI Detection
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="camera-controls">
+
+                        <button
+                            class="start-btn"
+                            id="startCamera">
+
+                            ▶ Start Camera
+
+                        </button>
+
+
+                        <button
+                            class="stop-btn"
+                            id="stopCamera"
+                            disabled>
+
+                            ■ Stop
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<script>
+
+/* =================================================
+   SENSOR DATA DEMO
+================================================= */
+
+function updateSensorData() {
+
+    const voltage =
+        228 + Math.random() * 3;
+
+    const current =
+        2.35 + Math.random() * 0.20;
+
+    const power =
+        voltage * current;
+
+    const energy =
+        12.35 + Math.random() * 0.15;
+
+    const frequency =
+        49.8 + Math.random() * 0.5;
+
+
+    document.getElementById(
+        "voltage"
+    ).textContent =
+        voltage.toFixed(0);
+
+
+    document.getElementById(
+        "current"
+    ).textContent =
+        current.toFixed(2);
+
+
+    document.getElementById(
+        "power"
+    ).textContent =
+        power.toFixed(0);
+
+
+    document.getElementById(
+        "energy"
+    ).textContent =
+        energy.toFixed(2);
+
+
+    document.getElementById(
+        "tableVoltage"
+    ).textContent =
+        voltage.toFixed(0);
+
+
+    document.getElementById(
+        "tableCurrent"
+    ).textContent =
+        current.toFixed(2);
+
+
+    document.getElementById(
+        "tablePower"
+    ).textContent =
+        power.toFixed(0);
+
+
+    document.getElementById(
+        "tableEnergy"
+    ).textContent =
+        energy.toFixed(2);
+
+
+    document.getElementById(
+        "frequency"
+    ).textContent =
+        frequency.toFixed(1);
+
+}
+
+
+setInterval(
+    updateSensorData,
+    3000
+);
+
+
+
+/* =================================================
+   TIMESTAMP
+================================================= */
+
+function updateTime() {
+
+    const now = new Date();
+
+    document.getElementById(
+        "timestamp"
+    ).textContent =
+        now.toLocaleString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        );
+
+}
+
+updateTime();
+
+setInterval(
+    updateTime,
+    1000
+);
+
+
+
+/* =================================================
+   AI PERSON DETECTION
+================================================= */
+
+const video =
+    document.getElementById(
+        "video"
+    );
+
+const canvas =
+    document.getElementById(
+        "canvas"
+    );
+
+const ctx =
+    canvas.getContext(
+        "2d"
+    );
+
+const personCount =
+    document.getElementById(
+        "personCount"
+    );
+
+const cameraMessage =
+    document.getElementById(
+        "cameraMessage"
+    );
+
+const startButton =
+    document.getElementById(
+        "startCamera"
+    );
+
+const stopButton =
+    document.getElementById(
+        "stopCamera"
+    );
+
+
+let model = null;
+
+let stream = null;
+
+let detecting = false;
+
+
+
+/* =================================================
+   LOAD AI MODEL
+================================================= */
+
+async function loadModel() {
+
+    cameraMessage.innerHTML =
+        "Loading AI person detection model...";
+
+
+    try {
+
+        model =
+            await cocoSsd.load();
+
+
+        cameraMessage.innerHTML =
+            "AI model loaded.<br>Starting camera...";
+
+
+        return true;
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        cameraMessage.innerHTML =
+            "Could not load AI model.<br>" +
+            "Check your internet connection.";
+
+        return false;
+
+    }
+
+}
+
+
+
+/* =================================================
+   START CAMERA
+================================================= */
+
+async function startCamera() {
+
+    if (detecting) {
+        return;
+    }
+
+
+    if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ) {
+
+        cameraMessage.innerHTML =
+            "Camera is not supported by this browser.";
+
+        return;
+
+    }
+
+
+    startButton.disabled = true;
+
+
+    cameraMessage.classList.remove(
+        "hidden"
+    );
+
+
+    cameraMessage.innerHTML =
+        "Requesting camera permission...";
+
+
+    try {
+
+        stream =
+            await navigator.mediaDevices
+                .getUserMedia({
+
+                    video: {
+                        width: {
+                            ideal: 1280
+                        },
+
+                        height: {
+                            ideal: 720
+                        },
+
+                        facingMode: "user"
+                    },
+
+                    audio: false
+
+                });
+
+
+        video.srcObject =
+            stream;
+
+
+        await video.play();
+
+
+        canvas.width =
+            video.videoWidth;
+
+        canvas.height =
+            video.videoHeight;
+
+
+        cameraMessage.classList.add(
+            "hidden"
+        );
+
+
+        stopButton.disabled = false;
+
+
+        detecting = true;
+
+
+        detectPeople();
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+
+        cameraMessage.innerHTML =
+            "Camera permission denied.<br>" +
+            "Please allow camera access.";
+
+
+        startButton.disabled = false;
+
+    }
+
+}
+
+
+
+/* =================================================
+   STOP CAMERA
+================================================= */
+
+function stopCamera() {
+
+    detecting = false;
+
+
+    if (stream) {
+
+        stream
+            .getTracks()
+            .forEach(
+                track => track.stop()
+            );
+
+        stream = null;
+
+    }
+
+
+    video.srcObject = null;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    personCount.textContent =
+        "0";
+
+
+    cameraMessage.innerHTML =
+        "Camera stopped.<br>" +
+        "Click Start Camera to begin.";
+
+
+    cameraMessage.classList.remove(
+        "hidden"
+    );
+
+
+    startButton.disabled = false;
+
+    stopButton.disabled = true;
+
+}
+
+
+
+/* =================================================
+   PERSON DETECTION
+================================================= */
+
+async function detectPeople() {
+
+    if (
+        !detecting ||
+        !model
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        video.readyState <
+        HTMLMediaElement.HAVE_CURRENT_DATA
+    ) {
+
+        requestAnimationFrame(
+            detectPeople
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const predictions =
+            await model.detect(
+                video,
+                20,
+                0.50
+            );
+
+
+        const people =
+            predictions.filter(
+                prediction =>
+                    prediction.class ===
+                    "person" &&
+                    prediction.score >=
+                    0.50
+            );
+
+
+        /* ============================
+           UPDATE PERSON COUNT
+        ============================ */
+
+        personCount.textContent =
+            people.length;
+
+
+
+        /* ============================
+           CLEAR OLD BOXES
+        ============================ */
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+
+        /* ============================
+           DRAW DETECTION BOXES
+        ============================ */
+
+        people.forEach(
+            (person, index) => {
+
+                const [
+                    x,
+                    y,
+                    width,
+                    height
+                ] =
+                    person.bbox;
+
+
+                /*
+                    Bounding box
+                */
+
+                ctx.strokeStyle =
+                    "#7CFF4F";
+
+                ctx.lineWidth =
+                    4;
+
+
+                ctx.strokeRect(
+                    x,
+                    y,
+                    width,
+                    height
+                );
+
+
+
+                /*
+                    Confidence
+                */
+
+                const confidence =
+                    Math.round(
+                        person.score * 100
+                    );
+
+
+                const label =
+                    "Person " +
+                    (index + 1) +
+                    " - " +
+                    confidence +
+                    "%";
+
+
+                ctx.font =
+                    "bold 15px Arial";
+
+
+                const textWidth =
+                    ctx.measureText(
+                        label
+                    ).width;
+
+
+                ctx.fillStyle =
+                    "rgba(0,0,0,0.75)";
+
+
+                ctx.fillRect(
+                    x,
+                    Math.max(
+                        0,
+                        y - 28
+                    ),
+                    textWidth + 14,
+                    28
+                );
+
+
+                ctx.fillStyle =
+                    "white";
+
+
+                ctx.fillText(
+                    label,
+                    x + 7,
+                    Math.max(
+                        19,
+                        y - 8
+                    )
+                );
+
+            }
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Detection error:",
+            error
+        );
+
+    }
+
+
+    if (detecting) {
+
+        requestAnimationFrame(
+            detectPeople
+        );
+
+    }
+
+}
+
+
+
+/* =================================================
+   BUTTON EVENTS
+================================================= */
+
+startButton.addEventListener(
+    "click",
+    async () => {
+
+        if (!model) {
+
+            const loaded =
+                await loadModel();
+
+            if (!loaded) {
+                return;
+            }
+
+        }
+
+
+        await startCamera();
+
+    }
+);
+
+
+stopButton.addEventListener(
+    "click",
+    () => {
+
+        stopCamera();
+
+    }
+);
+
+
+/* =================================================
+   LOAD MODEL WHEN PAGE OPENS
+================================================= */
+
+loadModel();
+
+
+/* =================================================
+   CLEANUP
+================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        stopCamera();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

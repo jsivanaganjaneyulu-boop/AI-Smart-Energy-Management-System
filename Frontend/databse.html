@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Database - MongoDB | Smart Energy Management System</title>
+
+
+<style>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7f8;
+    color: #071a2b;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+
+    height: 72px;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+
+    background:
+        linear-gradient(
+            90deg,
+            #006d3d,
+            #07834a
+        );
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 25px;
+}
+
+
+.header-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+.menu {
+
+    font-size: 28px;
+
+    cursor: pointer;
+}
+
+
+.logo {
+
+    width: 42px;
+    height: 42px;
+
+    border: 2px solid #8cff52;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+
+.system-name {
+
+    font-size: 20px;
+
+    font-weight: 600;
+}
+
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+.admin {
+
+    font-weight: 600;
+
+    font-size: 16px;
+}
+
+
+.notification {
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+
+    position: fixed;
+
+    left: 0;
+    top: 72px;
+    bottom: 0;
+
+    width: 270px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #061d2b,
+            #03151f
+        );
+
+    color: white;
+
+    padding-top: 25px;
+
+    z-index: 900;
+}
+
+
+.nav-item {
+
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 0 27px;
+
+    color: #dce6ea;
+
+    text-decoration: none;
+
+    font-size: 16px;
+
+    transition: 0.2s;
+}
+
+
+.nav-item:hover {
+
+    background:
+        rgba(
+            0,
+            255,
+            120,
+            0.10
+        );
+}
+
+
+.nav-item.active {
+
+    background:
+        linear-gradient(
+            90deg,
+            #078a4e,
+            #08a85c
+        );
+
+    color: white;
+
+    border-left:
+        4px solid #8cff52;
+}
+
+
+.nav-icon {
+
+    width: 25px;
+
+    text-align: center;
+
+    font-size: 20px;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main {
+
+    margin-left: 270px;
+
+    padding:
+        105px
+        35px
+        40px;
+
+    min-height: 100vh;
+}
+
+
+.page-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+
+.page-heading h1 {
+
+    font-size: 36px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   DATABASE CONNECTION
+===================================================== */
+
+.connection {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #078447;
+
+    font-size: 17px;
+
+    font-weight: 600;
+}
+
+
+.connection-dot {
+
+    width: 14px;
+    height: 14px;
+
+    background: #08a85c;
+
+    border-radius: 50%;
+
+    animation: pulse 1.5s infinite;
+}
+
+
+@keyframes pulse {
+
+    0% {
+        box-shadow:
+            0 0 0 0
+            rgba(8,168,92,.45);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 8px
+            rgba(8,168,92,0);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0
+            rgba(8,168,92,0);
+    }
+
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+.tabs {
+
+    display: flex;
+
+    gap: 55px;
+
+    border-bottom:
+        1px solid #dce2e6;
+
+    margin-bottom: 20px;
+}
+
+
+.tab {
+
+    border: none;
+
+    background: none;
+
+    padding:
+        0 15px
+        15px;
+
+    font-size: 16px;
+
+    color: #46576a;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+
+.tab.active {
+
+    color: #078a4e;
+
+    font-weight: 600;
+}
+
+
+.tab.active::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: -1px;
+
+    height: 3px;
+
+    background: #078a4e;
+}
+
+
+/* =====================================================
+   DATABASE CONTENT
+===================================================== */
+
+.database-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        240px 1fr;
+
+    gap: 18px;
+}
+
+
+/* =====================================================
+   COLLECTION PANEL
+===================================================== */
+
+.collection-panel {
+
+    background: white;
+
+    border:
+        1px solid #dfe5e8;
+
+    border-radius: 8px;
+
+    padding: 14px;
+
+    min-height: 650px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0,0,0,.03);
+}
+
+
+.collection-item {
+
+    padding:
+        14px
+        15px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    margin-bottom: 4px;
+
+    transition: .2s;
+}
+
+
+.collection-item:hover {
+
+    background: #eef8f2;
+
+    color: #078a4e;
+}
+
+
+.collection-item.active {
+
+    background:
+        #eaf8f0;
+
+    color:
+        #078a4e;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   DATA PANEL
+===================================================== */
+
+.data-panel {
+
+    background: white;
+
+    border:
+        1px solid #dfe5e8;
+
+    border-radius: 8px;
+
+    min-height: 650px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0,0,0,.03);
+}
+
+
+.data-header {
+
+    padding:
+        22px 25px;
+
+    border-bottom:
+        1px solid #e1e6e9;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.data-title {
+
+    font-size: 21px;
+
+    font-weight: 700;
+}
+
+
+.data-title span {
+
+    color: #526579;
+
+    font-weight: 400;
+}
+
+
+.search-box {
+
+    height: 40px;
+
+    width: 220px;
+
+    border:
+        1px solid #ccd5db;
+
+    border-radius: 7px;
+
+    padding:
+        0 12px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+.search-box:focus {
+
+    border-color:
+        #078a4e;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(7,138,78,.08);
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-container {
+
+    overflow-x: auto;
+
+    padding:
+        0 15px;
+}
+
+
+.data-table {
+
+    width: 100%;
+
+    border-collapse:
+        collapse;
+
+    min-width: 850px;
+}
+
+
+.data-table thead {
+
+    background:
+        #f0f4f6;
+}
+
+
+.data-table th {
+
+    text-align: left;
+
+    padding:
+        17px 15px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    border-bottom:
+        1px solid #dce2e6;
+}
+
+
+.data-table td {
+
+    padding:
+        17px 15px;
+
+    border-bottom:
+        1px solid #e5e9ec;
+
+    font-size: 14px;
+}
+
+
+.data-table tbody tr:hover {
+
+    background:
+        #fafcfc;
+}
+
+
+/* =====================================================
+   FOOTER / PAGINATION
+===================================================== */
+
+.data-footer {
+
+    border-top:
+        1px solid #e1e6e9;
+
+    margin-top: 10px;
+
+    padding:
+        18px 25px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    color: #536579;
+
+    font-size: 14px;
+}
+
+
+.pagination {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.page-btn {
+
+    width: 38px;
+    height: 38px;
+
+    border:
+        1px solid #d7dfe4;
+
+    background: white;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+
+.page-btn:hover {
+
+    background: #eef8f2;
+
+    color: #078a4e;
+}
+
+
+.page-btn:disabled {
+
+    opacity: .45;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* =====================================================
+   PERFORMANCE
+===================================================== */
+
+.performance {
+
+    display: none;
+
+    padding: 30px;
+}
+
+
+.performance-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+
+.performance-card {
+
+    border:
+        1px solid #dfe5e8;
+
+    border-radius: 10px;
+
+    padding: 25px;
+
+    background:
+        #fafcfc;
+}
+
+
+.performance-card h3 {
+
+    font-size: 16px;
+
+    margin-bottom: 15px;
+}
+
+
+.performance-value {
+
+    font-size: 32px;
+
+    font-weight: 600;
+
+    color: #078a4e;
+}
+
+
+/* =====================================================
+   DATA PREVIEW
+===================================================== */
+
+.preview {
+
+    display: none;
+
+    padding: 30px;
+}
+
+
+.preview-title {
+
+    font-size: 22px;
+
+    margin-bottom: 20px;
+}
+
+
+.json-box {
+
+    background:
+        #071b26;
+
+    color:
+        #9cff73;
+
+    padding:
+        25px;
+
+    border-radius: 8px;
+
+    overflow-x: auto;
+
+    line-height: 1.7;
+
+    font-family:
+        Consolas,
+        monospace;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 1100px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+    }
+
+    .database-grid {
+        grid-template-columns:
+            200px 1fr;
+    }
+
+}
+
+
+@media(max-width: 800px) {
+
+    .sidebar {
+
+        transform:
+            translateX(-100%);
+
+        transition: .3s;
+    }
+
+    .sidebar.open {
+
+        transform:
+            translateX(0);
+    }
+
+    .main {
+
+        margin-left: 0;
+
+        padding:
+            100px
+            15px
+            30px;
+    }
+
+    .database-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .collection-panel {
+
+        min-height: auto;
+    }
+
+    .page-heading h1 {
+
+        font-size: 28px;
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    .system-name {
+
+        display: none;
+    }
+
+    .tabs {
+
+        gap: 10px;
+
+        overflow-x: auto;
+    }
+
+    .data-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 15px;
+    }
+
+    .search-box {
+
+        width: 100%;
+    }
+
+    .data-footer {
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div
+            class="menu"
+            id="menuButton"
+        >
+            ☰
+        </div>
+
+
+        <div class="logo">
+            ⚡
+        </div>
+
+
+        <div class="system-name">
+            Smart Energy Management System
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="admin">
+            👤 Admin
+        </div>
+
+        <div class="notification">
+            ♧
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<nav
+    class="sidebar"
+    id="sidebar"
+>
+
+    <a
+        href="database.html" class="nav-item active"
+    >
+
+        <span class="nav-icon">
+            ⌂
+        </span>
+
+        Dashboard</a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ▦
+        </span>
+
+        Rooms & Devices</a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ◉
+        </span>
+
+        Data Collection</a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ✣
+        </span>
+
+        AI Processing</a>
+
+
+    <a
+        href="#"
+        class="nav-item active"
+    >
+
+        <span class="nav-icon">
+            ▤
+        </span>
+
+        Database</a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ♢
+        </span>
+
+        Alerts</a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ⚙
+        </span>
+
+        Settings</a>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-heading">
+
+        <h1>
+            Database (MongoDB)
+        </h1>
+
+
+        <div class="connection">
+
+            <span>
+                Connected
+            </span>
+
+            <span
+                class="connection-dot">
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         TABS
+    ================================================== -->
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            onclick="showTab('collections', this)"
+        >
+            Collections
+        </button>
+
+
+        <button
+            class="tab"
+            onclick="showTab('preview', this)"
+        >
+            Data Preview
+        </button>
+
+
+        <button
+            class="tab"
+            onclick="showTab('performance', this)"
+        >
+            Performance
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         COLLECTIONS
+    ================================================== -->
+
+    <div
+        id="collections"
+        class="database-grid"
+    >
+
+
+        <!-- COLLECTION LIST -->
+
+        <div class="collection-panel">
+
+            <div
+                class="collection-item active"
+                onclick="selectCollection('users', this)"
+            >
+                users
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('rooms', this)"
+            >
+                rooms
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('devices', this)"
+            >
+                devices
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('sensor_data', this)"
+            >
+                sensor_data
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('energy_consumption', this)"
+            >
+                energy_consumption
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('person_count', this)"
+            >
+                person_count
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('predictions', this)"
+            >
+                predictions
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('alerts', this)"
+            >
+                alerts
+            </div>
+
+
+            <div
+                class="collection-item"
+                onclick="selectCollection('recommendations', this)"
+            >
+                recommendations
+            </div>
+
+        </div>
+
+
+
+        <!-- DATA PANEL -->
+
+        <div class="data-panel">
+
+
+            <div class="data-header">
+
+                <div
+                    class="data-title"
+                    id="collectionTitle"
+                >
+                    sensor_data
+                    <span>
+                        (Latest 5 Records)
+                    </span>
+                </div>
+
+
+                <input
+                    type="search"
+                    class="search-box"
+                    id="searchBox"
+                    placeholder="Search records..."
+                >
+
+            </div>
+
+
+
+            <div class="table-container">
+
+                <table
+                    class="data-table"
+                    id="dataTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                _id
+                            </th>
+
+                            <th>
+                                device_id
+                            </th>
+
+                            <th>
+                                voltage
+                            </th>
+
+                            <th>
+                                current
+                            </th>
+
+                            <th>
+                                power
+                            </th>
+
+                            <th>
+                                energy
+                            </th>
+
+                            <th>
+                                timestamp
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="tableBody"
+                    >
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- FOOTER -->
+
+            <div class="data-footer">
+
+                <div>
+                    Total Documents:
+                    <strong id="totalDocuments">
+                        125,430
+                    </strong>
+                </div>
+
+
+                <div class="pagination">
+
+                    <span id="pageNumber">
+                        Page 1 of 25
+                    </span>
+
+
+                    <button
+                        class="page-btn"
+                        id="previous"
+                        onclick="previousPage()"
+                    >
+                        ‹
+                    </button>
+
+
+                    <button
+                        class="page-btn"
+                        id="next"
+                        onclick="nextPage()"
+                    >
+                        ›
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         DATA PREVIEW
+    ================================================== -->
+
+    <div
+        class="preview"
+        id="preview"
+    >
+
+        <h2 class="preview-title">
+            MongoDB Data Preview
+        </h2>
+
+
+        <div class="json-box">
+
+<pre id="jsonPreview">{
+  "_id": "...7f3a1b6c",
+  "device_id": "dev_001",
+  "voltage": 229,
+  "current": 2.45,
+  "power": 560,
+  "energy": 12.45,
+  "timestamp": "24/05/2024 10:30:35"
+}</pre>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         PERFORMANCE
+    ================================================== -->
+
+    <div
+        class="performance"
+        id="performance"
+    >
+
+        <div class="performance-grid">
+
+
+            <div class="performance-card">
+
+                <h3>
+                    Database Status
+                </h3>
+
+                <div class="performance-value">
+                    Connected
+                </div>
+
+            </div>
+
+
+            <div class="performance-card">
+
+                <h3>
+                    Total Documents
+                </h3>
+
+                <div
+                    class="performance-value"
+                    id="performanceDocuments"
+                >
+                    125,430
+                </div>
+
+            </div>
+
+
+            <div class="performance-card">
+
+                <h3>
+                    Response Time
+                </h3>
+
+                <div class="performance-value">
+                    24 ms
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+
+<script>
+
+/* =====================================================
+   DATABASE SAMPLE DATA
+===================================================== */
+
+const sensorData = [
+
+    {
+        id: "...7f3a1b6c",
+        device: "dev_001",
+        voltage: "229",
+        current: "2.45",
+        power: "560",
+        energy: "12.45",
+        timestamp: "24/05/2024 10:30:35"
+    },
+
+    {
+        id: "...7f3a1b6d",
+        device: "dev_002",
+        voltage: "228",
+        current: "1.85",
+        power: "420",
+        energy: "8.32",
+        timestamp: "24/05/2024 10:30:30"
+    },
+
+    {
+        id: "...7f3a1b6e",
+        device: "dev_003",
+        voltage: "230",
+        current: "3.10",
+        power: "713",
+        energy: "15.21",
+        timestamp: "24/05/2024 10:30:15"
+    },
+
+    {
+        id: "...7f3a1b6f",
+        device: "dev_004",
+        voltage: "229",
+        current: "2.10",
+        power: "481",
+        energy: "10.12",
+        timestamp: "24/05/2024 10:30:10"
+    },
+
+    {
+        id: "...7f3a1b70",
+        device: "dev_002",
+        voltage: "229",
+        current: "1.60",
+        power: "367",
+        energy: "7.85",
+        timestamp: "24/05/2024 10:30:05"
+    }
+
+];
+
+
+/* =====================================================
+   OTHER COLLECTION DATA
+===================================================== */
+
+const collectionData = {
+
+    users: [
+        {
+            id: "usr_001",
+            device: "-",
+            voltage: "-",
+            current: "-",
+            power: "-",
+            energy: "-",
+            timestamp: "24/05/2024 10:30:35"
+        }
+    ],
+
+    rooms: [
+        {
+            id: "room_001",
+            device: "Living Room",
+            voltage: "-",
+            current: "-",
+            power: "-",
+            energy: "-",
+            timestamp: "24/05/2024 10:30:35"
+        }
+    ],
+
+    devices: [
+        {
+            id: "dev_001",
+            device: "LED Bulb",
+            voltage: "229",
+            current: "0.05",
+            power: "12",
+            energy: "0.12",
+            timestamp: "24/05/2024 10:30:35"
+        }
+    ],
+
+    sensor_data: sensorData,
+
+    energy_consumption: [
+        {
+            id: "eng_001",
+            device: "dev_001",
+            voltage: "-",
+            current: "-",
+            power: "560",
+            energy: "12.45",
+            timestamp: "24/05/2024 10:30:35"
+        }
+    ],
+
+    person_count: [
+        {
+            id: "pc_001",
+            device: "room_001",
+            voltage: "-",
+            current: "-",
+            power: "-",
+            energy: "5 People",
+            timestamp: "24/05/2024 10:30:35"
+        }
+    ],
+
+    predictions: [
+        {
+            id: "pred_001",
+            device: "dev_001",
+            voltage: "-",
+            current: "-",
+            power: "-",
+            energy: "14.25 kWh",
+            timestamp: "25/05/2024"
+        }
+    ],
+
+    alerts: [
+        {
+            id: "alert_001",
+            device: "dev_002",
+            voltage: "-",
+            current: "-",
+            power: "High",
+            energy: "-",
+            timestamp: "24/05/2024 10:25:00"
+        }
+    ],
+
+    recommendations: [
+        {
+            id: "rec_001",
+            device: "dev_001",
+            voltage: "-",
+            current: "-",
+            power: "-",
+            energy: "Save 12%",
+            timestamp: "24/05/2024 10:20:00"
+        }
+    ]
+
+};
+
+
+/* =====================================================
+   CURRENT PAGE
+===================================================== */
+
+let currentPage = 1;
+
+const totalPages = 25;
+
+let currentCollection = "sensor_data";
+
+
+/* =====================================================
+   RENDER TABLE
+===================================================== */
+
+function renderTable(data = null) {
+
+    const body =
+        document.getElementById(
+            "tableBody"
+        );
+
+
+    const records =
+        data ||
+        collectionData[
+            currentCollection
+        ];
+
+
+    body.innerHTML = "";
+
+
+    records.forEach(
+        record => {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHTML(record.id)}
+                </td>
+
+                <td>
+                    ${escapeHTML(record.device)}
+                </td>
+
+                <td>
+                    ${escapeHTML(record.voltage)}
+                </td>
+
+                <td>
+                    ${escapeHTML(record.current)}
+                </td>
+
+                <td>
+                    ${escapeHTML(record.power)}
+                </td>
+
+                <td>
+                    ${escapeHTML(record.energy)}
+                </td>
+
+                <td>
+                    ${escapeHTML(record.timestamp)}
+                </td>
+
+            `;
+
+
+            body.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SELECT COLLECTION
+===================================================== */
+
+function selectCollection(
+    collection,
+    element
+) {
+
+    currentCollection =
+        collection;
+
+
+    document
+        .querySelectorAll(
+            ".collection-item"
+        )
+        .forEach(
+            item => {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    element.classList.add(
+        "active"
+    );
+
+
+    document.getElementById(
+        "collectionTitle"
+    ).innerHTML = `
+
+        ${collection}
+
+        <span>
+            (Latest 5 Records)
+        </span>
+
+    `;
+
+
+    renderTable();
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+document
+    .getElementById(
+        "searchBox"
+    )
+    .addEventListener(
+        "input",
+        function() {
+
+            const keyword =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const records =
+                collectionData[
+                    currentCollection
+                ];
+
+
+            const filtered =
+                records.filter(
+                    record =>
+                        Object.values(
+                            record
+                        )
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(
+                            keyword
+                        )
+                );
+
+
+            renderTable(
+                filtered
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+function nextPage() {
+
+    if (
+        currentPage <
+        totalPages
+    ) {
+
+        currentPage++;
+
+        updatePagination();
+
+    }
+
+}
+
+
+function previousPage() {
+
+    if (
+        currentPage >
+        1
+    ) {
+
+        currentPage--;
+
+        updatePagination();
+
+    }
+
+}
+
+
+function updatePagination() {
+
+    document.getElementById(
+        "pageNumber"
+    ).textContent =
+        `Page ${currentPage} of ${totalPages}`;
+
+
+    document.getElementById(
+        "previous"
+    ).disabled =
+        currentPage === 1;
+
+
+    document.getElementById(
+        "next"
+    ).disabled =
+        currentPage === totalPages;
+
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+function showTab(
+    tabName,
+    button
+) {
+
+    document
+        .querySelectorAll(
+            ".tab"
+        )
+        .forEach(
+            tab => {
+
+                tab.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    document.getElementById(
+        "collections"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "preview"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "performance"
+    ).style.display =
+        "none";
+
+
+    if (
+        tabName ===
+        "collections"
+    ) {
+
+        document.getElementById(
+            "collections"
+        ).style.display =
+            "grid";
+
+    }
+
+
+    if (
+        tabName ===
+        "preview"
+    ) {
+
+        document.getElementById(
+            "preview"
+        ).style.display =
+            "block";
+
+    }
+
+
+    if (
+        tabName ===
+        "performance"
+    ) {
+
+        document.getElementById(
+            "performance"
+        ).style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+document
+    .getElementById(
+        "menuButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById(
+                    "sidebar"
+                )
+                .classList.toggle(
+                    "open"
+                );
+
+        }
+    );
+
+
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
+
+function escapeHTML(
+    value
+) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+renderTable();
+
+updatePagination();
+
+</script>
+
+
+</body>
+</html>

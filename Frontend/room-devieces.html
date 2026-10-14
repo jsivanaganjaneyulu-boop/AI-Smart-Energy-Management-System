@@ -1,0 +1,2783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Rooms & Devices | Smart Energy Management System
+    </title>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f5f8f7;
+
+            color: #17202b;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+
+        .app {
+
+            display: flex;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            width: 255px;
+
+            min-height: 100vh;
+
+            position: fixed;
+
+            left: 0;
+
+            top: 0;
+
+            bottom: 0;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #003c2b,
+                    #00683e
+                );
+
+            color: white;
+
+            padding: 24px 15px;
+
+            z-index: 1000;
+
+        }
+
+
+        /* BRAND */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                5px 12px 30px;
+
+        }
+
+
+        .brand-logo {
+
+            width: 45px;
+
+            height: 45px;
+
+            border:
+                2px solid #8ce34f;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #9df252;
+
+            font-size: 23px;
+
+        }
+
+
+        .brand-title {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+        }
+
+
+        .brand-subtitle {
+
+            font-size: 13px;
+
+            color: #c9e7d8;
+
+        }
+
+
+        /* NAVIGATION */
+
+        .nav {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+
+        }
+
+
+        .nav-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding:
+                13px 15px;
+
+            border-radius: 9px;
+
+            color: #d7eee3;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            transition: .2s;
+
+        }
+
+
+        .nav-item:hover {
+
+            background:
+                rgba(255,255,255,.10);
+
+            color: white;
+
+        }
+
+
+        .nav-item.active {
+
+            background:
+                rgba(255,255,255,.17);
+
+            color: white;
+
+            font-weight: 600;
+
+        }
+
+
+        .nav-icon {
+
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 19px;
+
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+
+            margin-left: 255px;
+
+            width: calc(100% - 255px);
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           TOP BAR
+        ===================================================== */
+
+        .topbar {
+
+            height: 75px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e4e9e7;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 32px;
+
+        }
+
+
+        .page-title {
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+        }
+
+
+        .page-subtitle {
+
+            color: #73808b;
+
+            font-size: 14px;
+
+            margin-top: 3px;
+
+        }
+
+
+        .top-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+        }
+
+
+        .live-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #16834f;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        .live-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            background: #18a55b;
+
+            border-radius: 50%;
+
+            animation:
+                pulse 1.5s infinite;
+
+        }
+
+
+        @keyframes pulse {
+
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+
+        }
+
+
+        .user {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .user-avatar {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #dff4e8;
+
+            color: #087c49;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+
+            padding: 30px;
+
+        }
+
+
+        /* =====================================================
+           SUMMARY CARDS
+        ===================================================== */
+
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .summary-card {
+
+            background: white;
+
+            border:
+                1px solid #e3e9e6;
+
+            border-radius: 13px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,.04);
+
+        }
+
+
+        .summary-label {
+
+            color: #74808a;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .summary-value {
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            color: #17202b;
+
+        }
+
+
+        .summary-unit {
+
+            font-size: 14px;
+
+            color: #75818c;
+
+            margin-left: 4px;
+
+        }
+
+
+        /* =====================================================
+           ACTION BAR
+        ===================================================== */
+
+        .action-bar {
+
+            background: white;
+
+            border:
+                1px solid #e2e8e5;
+
+            border-radius: 13px;
+
+            padding: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .search-box {
+
+            position: relative;
+
+            width: 360px;
+
+        }
+
+
+        .search-box input {
+
+            width: 100%;
+
+            height: 45px;
+
+            border:
+                1px solid #d6ded9;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            padding:
+                0 15px 0 42px;
+
+            font-size: 14px;
+
+        }
+
+
+        .search-box input:focus {
+
+            border-color: #07864d;
+
+        }
+
+
+        .search-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #73808a;
+
+        }
+
+
+        .action-buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        .btn {
+
+            height: 45px;
+
+            padding:
+                0 20px;
+
+            border-radius: 8px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: .2s;
+
+        }
+
+
+        .btn-primary {
+
+            background: #07864d;
+
+            color: white;
+
+        }
+
+
+        .btn-primary:hover {
+
+            background: #056c3e;
+
+        }
+
+
+        .btn-secondary {
+
+            background: white;
+
+            color: #087c49;
+
+            border:
+                1px solid #087c49;
+
+        }
+
+
+        .btn-secondary:hover {
+
+            background: #effaf4;
+
+        }
+
+
+        /* =====================================================
+           ROOM SECTION
+        ===================================================== */
+
+        .section-title {
+
+            font-size: 21px;
+
+            font-weight: 700;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .rooms-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+        }
+
+
+        .room-card {
+
+            background: white;
+
+            border:
+                1px solid #e1e8e4;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,.04);
+
+        }
+
+
+        .room-header {
+
+            padding: 18px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            border-bottom:
+                1px solid #edf1ef;
+
+        }
+
+
+        .room-name {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+        }
+
+
+        .room-location {
+
+            color: #78838d;
+
+            font-size: 13px;
+
+            margin-top: 4px;
+
+        }
+
+
+        .room-status {
+
+            padding:
+                5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+        }
+
+
+        .occupied {
+
+            background: #e5f7ed;
+
+            color: #087c49;
+
+        }
+
+
+        .unoccupied {
+
+            background: #f1f3f4;
+
+            color: #68737d;
+
+        }
+
+
+        .room-body {
+
+            padding: 18px;
+
+        }
+
+
+        .room-stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .room-stat {
+
+            background: #f6f9f7;
+
+            padding: 13px;
+
+            border-radius: 9px;
+
+        }
+
+
+        .room-stat-label {
+
+            color: #78838d;
+
+            font-size: 12px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .room-stat-value {
+
+            font-size: 19px;
+
+            font-weight: 700;
+
+        }
+
+
+        .device-list {
+
+            border-top:
+                1px solid #edf1ef;
+
+            padding-top: 14px;
+
+        }
+
+
+        .device-list-title {
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .device-row {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid #f0f3f2;
+
+        }
+
+
+        .device-row:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .device-info {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .device-icon {
+
+            width: 34px;
+
+            height: 34px;
+
+            background: #eaf7f0;
+
+            color: #087c49;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .device-name {
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+        .device-power {
+
+            font-size: 12px;
+
+            color: #7a858e;
+
+        }
+
+
+        .device-status {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+        }
+
+
+        .device-on {
+
+            background: #20a45e;
+
+            box-shadow:
+                0 0 0 3px
+                #dff4e8;
+
+        }
+
+
+        .device-off {
+
+            background: #b6bec5;
+
+        }
+
+
+        .room-footer {
+
+            padding:
+                13px 18px;
+
+            border-top:
+                1px solid #edf1ef;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+        }
+
+
+        .view-room {
+
+            border: none;
+
+            background: transparent;
+
+            color: #087c49;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================================
+           ADD DEVICE MODAL
+        ===================================================== */
+
+        .modal {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,.45);
+
+            z-index: 2000;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+        }
+
+
+        .modal.show {
+
+            display: flex;
+
+        }
+
+
+        .modal-content {
+
+            width: 100%;
+
+            max-width: 520px;
+
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.2);
+
+        }
+
+
+        .modal-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .modal-title {
+
+            font-size: 22px;
+
+            font-weight: 700;
+
+        }
+
+
+        .close-modal {
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #69757f;
+
+        }
+
+
+        .form-group {
+
+            margin-bottom: 17px;
+
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        .form-group input,
+
+        .form-group select {
+
+            width: 100%;
+
+            height: 45px;
+
+            border:
+                1px solid #d6ded9;
+
+            border-radius: 8px;
+
+            padding:
+                0 12px;
+
+            outline: none;
+
+            font-size: 14px;
+
+        }
+
+
+        .form-group input:focus,
+
+        .form-group select:focus {
+
+            border-color: #07864d;
+
+        }
+
+
+        .modal-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+        }
+
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .toast {
+
+            position: fixed;
+
+            right: 25px;
+
+            bottom: 25px;
+
+            background: #12352a;
+
+            color: white;
+
+            padding:
+                14px 20px;
+
+            border-radius: 8px;
+
+            transform:
+                translateY(100px);
+
+            opacity: 0;
+
+            transition: .3s;
+
+            z-index: 3000;
+
+        }
+
+
+        .toast.show {
+
+            transform:
+                translateY(0);
+
+            opacity: 1;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        .menu-button {
+
+            display: none;
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+        }
+
+
+        @media (max-width: 1100px) {
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .rooms-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+
+                transform:
+                    translateX(-100%);
+
+                transition: .3s;
+
+            }
+
+
+            .sidebar.open {
+
+                transform:
+                    translateX(0);
+
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+                width: 100%;
+
+            }
+
+
+            .menu-button {
+
+                display: block;
+
+            }
+
+
+            .topbar {
+
+                padding:
+                    0 18px;
+
+            }
+
+
+            .content {
+
+                padding: 18px;
+
+            }
+
+
+            .rooms-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .action-bar {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+            }
+
+
+            .search-box {
+
+                width: 100%;
+
+            }
+
+        }
+
+
+        @media (max-width: 550px) {
+
+            .summary-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .action-buttons {
+
+                flex-direction: column;
+
+            }
+
+
+            .top-actions .live-status {
+
+                display: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ⚡
+            </div>
+
+            <div>
+
+                <div class="brand-title">
+                    Smart Energy
+                </div>
+
+                <div class="brand-subtitle">
+                    Management System
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <nav class="nav">
+
+
+            <a
+                href="dashboard.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="room-devices.html"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
+                Rooms & Devices
+
+            </a>
+
+
+            <a
+                href="data collection.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ◉
+                </span>
+
+                Data Collection
+
+            </a>
+
+
+            <a
+                href="Ai analytics.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ✣
+                </span>
+
+                AI Processing
+
+            </a>
+
+
+            <a
+                href="alert.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ♢
+                </span>
+
+                Alerts
+
+            </a>
+
+
+            <a
+                href="reports.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ▤
+                </span>
+
+                Reports
+
+            </a>
+
+
+            <a
+                href="database.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                Database
+
+            </a>
+
+
+            <a
+                href="login.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⇥
+                </span>
+
+                Logout
+
+            </a>
+
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:15px;
+                "
+            >
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                >
+                    ☰
+                </button>
+
+
+                <div>
+
+                    <div class="page-title">
+                        Rooms & Devices
+                    </div>
+
+                    <div class="page-subtitle">
+                        Manage rooms and connected electrical devices
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <div class="live-status">
+
+                    <span class="live-dot"></span>
+
+                    System Online
+
+                </div>
+
+
+                <div class="user">
+
+                    <div class="user-avatar">
+                        SN
+                    </div>
+
+                    <span>
+                        Admin
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+
+            <!-- =================================================
+                 SUMMARY
+            ================================================== -->
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Total Rooms
+                    </div>
+
+                    <div class="summary-value"
+                         id="totalRooms">
+                        3
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Total Devices
+                    </div>
+
+                    <div class="summary-value"
+                         id="totalDevices">
+                        8
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Active Devices
+                    </div>
+
+                    <div class="summary-value"
+                         id="activeDevices">
+                        5
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Current Power
+                    </div>
+
+                    <div class="summary-value">
+
+                        <span id="currentPower">
+                            560
+                        </span>
+
+                        <span class="summary-unit">
+                            W
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ACTION BAR
+            ================================================== -->
+
+            <div class="action-bar">
+
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search rooms or devices..."
+                    >
+
+                </div>
+
+
+                <div class="action-buttons">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="addRoomButton"
+                    >
+                        + Add Room
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="addDeviceButton"
+                    >
+                        + Add Device
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ROOMS
+            ================================================== -->
+
+            <h2 class="section-title">
+                Rooms
+            </h2>
+
+
+            <div
+                class="rooms-grid"
+                id="roomsGrid"
+            >
+
+
+                <!-- ROOM 1 -->
+
+                <div
+                    class="room-card"
+                    data-search="living room fan ac light"
+                >
+
+
+                    <div class="room-header">
+
+                        <div>
+
+                            <div class="room-name">
+                                Living Room
+                            </div>
+
+                            <div class="room-location">
+                                Ground Floor
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="room-status occupied"
+                        >
+                            OCCUPIED
+                        </span>
+
+                    </div>
+
+
+                    <div class="room-body">
+
+
+                        <div class="room-stats">
+
+
+                            <div class="room-stat">
+
+                                <div class="room-stat-label">
+                                    People
+                                </div>
+
+                                <div class="room-stat-value">
+                                    2
+                                </div>
+
+                            </div>
+
+
+                            <div class="room-stat">
+
+                                <div class="room-stat-label">
+                                    Power
+                                </div>
+
+                                <div class="room-stat-value">
+                                    320 W
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="device-list">
+
+                            <div class="device-list-title">
+                                Devices
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        ❄
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            Air Conditioner
+                                        </div>
+
+                                        <div class="device-power">
+                                            250 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-on"
+                                ></span>
+
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        💡
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            Smart Light
+                                        </div>
+
+                                        <div class="device-power">
+                                            40 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-on"
+                                ></span>
+
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        ▣
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            Television
+                                        </div>
+
+                                        <div class="device-power">
+                                            30 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-off"
+                                ></span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="room-footer">
+
+                        <button
+                            class="view-room"
+                            onclick="viewRoom('Living Room')"
+                        >
+                            View Details →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ROOM 2 -->
+
+                <div
+                    class="room-card"
+                    data-search="bedroom fan light ac"
+                >
+
+
+                    <div class="room-header">
+
+                        <div>
+
+                            <div class="room-name">
+                                Bedroom
+                            </div>
+
+                            <div class="room-location">
+                                First Floor
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="room-status occupied"
+                        >
+                            OCCUPIED
+                        </span>
+
+                    </div>
+
+
+                    <div class="room-body">
+
+
+                        <div class="room-stats">
+
+                            <div class="room-stat">
+
+                                <div class="room-stat-label">
+                                    People
+                                </div>
+
+                                <div class="room-stat-value">
+                                    1
+                                </div>
+
+                            </div>
+
+
+                            <div class="room-stat">
+
+                                <div class="room-stat-label">
+                                    Power
+                                </div>
+
+                                <div class="room-stat-value">
+                                    150 W
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="device-list">
+
+                            <div class="device-list-title">
+                                Devices
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        ❄
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            Fan
+                                        </div>
+
+                                        <div class="device-power">
+                                            70 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-on"
+                                ></span>
+
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        💡
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            LED Light
+                                        </div>
+
+                                        <div class="device-power">
+                                            20 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-on"
+                                ></span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="room-footer">
+
+                        <button
+                            class="view-room"
+                            onclick="viewRoom('Bedroom')"
+                        >
+                            View Details →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ROOM 3 -->
+
+                <div
+                    class="room-card"
+                    data-search="kitchen refrigerator microwave light"
+                >
+
+
+                    <div class="room-header">
+
+                        <div>
+
+                            <div class="room-name">
+                                Kitchen
+                            </div>
+
+                            <div class="room-location">
+                                Ground Floor
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="room-status unoccupied"
+                        >
+                            UNOCCUPIED
+                        </span>
+
+                    </div>
+
+
+                    <div class="room-body">
+
+
+                        <div class="room-stats">
+
+                            <div class="room-stat">
+
+                                <div class="room-stat-label">
+                                    People
+                                </div>
+
+                                <div class="room-stat-value">
+                                    0
+                                </div>
+
+                            </div>
+
+
+                            <div class="room-stat">
+
+                                <div class="room-stat-label">
+                                    Power
+                                </div>
+
+                                <div class="room-stat-value">
+                                    90 W
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="device-list">
+
+                            <div class="device-list-title">
+                                Devices
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        ▣
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            Refrigerator
+                                        </div>
+
+                                        <div class="device-power">
+                                            80 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-on"
+                                ></span>
+
+                            </div>
+
+
+                            <div class="device-row">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+                                        💡
+                                    </div>
+
+                                    <div>
+
+                                        <div class="device-name">
+                                            Kitchen Light
+                                        </div>
+
+                                        <div class="device-power">
+                                            10 W
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="device-status device-off"
+                                ></span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="room-footer">
+
+                        <button
+                            class="view-room"
+                            onclick="viewRoom('Kitchen')"
+                        >
+                            View Details →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADD DEVICE MODAL
+====================================================== -->
+
+<div
+    class="modal"
+    id="deviceModal"
+>
+
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                Add Device
+            </div>
+
+
+            <button
+                class="close-modal"
+                id="closeDeviceModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="deviceForm">
+
+
+            <div class="form-group">
+
+                <label>
+                    Device Name
+                </label>
+
+                <input
+                    type="text"
+                    id="deviceName"
+                    placeholder="Example: Air Conditioner"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Device Type
+                </label>
+
+                <select
+                    id="deviceType"
+                    required
+                >
+
+                    <option value="">
+                        Select device type
+                    </option>
+
+                    <option>
+                        Air Conditioner
+                    </option>
+
+                    <option>
+                        Fan
+                    </option>
+
+                    <option>
+                        Light
+                    </option>
+
+                    <option>
+                        Television
+                    </option>
+
+                    <option>
+                        Refrigerator
+                    </option>
+
+                    <option>
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Room
+                </label>
+
+                <select
+                    id="deviceRoom"
+                    required
+                >
+
+                    <option value="">
+                        Select room
+                    </option>
+
+                    <option>
+                        Living Room
+                    </option>
+
+                    <option>
+                        Bedroom
+                    </option>
+
+                    <option>
+                        Kitchen
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Power Rating (W)
+                </label>
+
+                <input
+                    type="number"
+                    id="devicePower"
+                    placeholder="Example: 100"
+                    min="0"
+                    required
+                >
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelDevice"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Add Device
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADD ROOM MODAL
+====================================================== -->
+
+<div
+    class="modal"
+    id="roomModal"
+>
+
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                Add Room
+            </div>
+
+
+            <button
+                class="close-modal"
+                id="closeRoomModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="roomForm">
+
+
+            <div class="form-group">
+
+                <label>
+                    Room Name
+                </label>
+
+                <input
+                    type="text"
+                    id="roomName"
+                    placeholder="Example: Study Room"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="roomLocation"
+                    placeholder="Example: First Floor"
+                    required
+                >
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelRoom"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Add Room
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
+const menuButton =
+    document.getElementById(
+        "menuButton"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+if (
+    menuButton &&
+    sidebar
+) {
+
+    menuButton.addEventListener(
+        "click",
+        function () {
+
+            sidebar.classList.toggle(
+                "open"
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH ROOMS
+===================================================== */
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+searchInput.addEventListener(
+    "input",
+    function () {
+
+        const search =
+            this.value
+                .toLowerCase()
+                .trim();
+
+
+        const rooms =
+            document.querySelectorAll(
+                ".room-card"
+            );
+
+
+        rooms.forEach(
+            function (room) {
+
+                const text =
+                    room
+                        .getAttribute(
+                            "data-search"
+                        )
+                        .toLowerCase();
+
+
+                if (
+                    text.includes(search)
+                ) {
+
+                    room.style.display =
+                        "";
+
+                } else {
+
+                    room.style.display =
+                        "none";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   DEVICE MODAL
+===================================================== */
+
+const deviceModal =
+    document.getElementById(
+        "deviceModal"
+    );
+
+
+document
+    .getElementById(
+        "addDeviceButton"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            deviceModal.classList.add(
+                "show"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "closeDeviceModal"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            deviceModal.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "cancelDevice"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            deviceModal.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   ROOM MODAL
+===================================================== */
+
+const roomModal =
+    document.getElementById(
+        "roomModal"
+    );
+
+
+document
+    .getElementById(
+        "addRoomButton"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            roomModal.classList.add(
+                "show"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "closeRoomModal"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            roomModal.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "cancelRoom"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            roomModal.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   ADD DEVICE
+===================================================== */
+
+document
+    .getElementById(
+        "deviceForm"
+    )
+    .addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById(
+                    "deviceName"
+                ).value;
+
+
+            showToast(
+                name +
+                " added successfully."
+            );
+
+
+            deviceModal.classList.remove(
+                "show"
+            );
+
+
+            this.reset();
+
+        }
+    );
+
+
+/* =====================================================
+   ADD ROOM
+===================================================== */
+
+document
+    .getElementById(
+        "roomForm"
+    )
+    .addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById(
+                    "roomName"
+                ).value;
+
+
+            showToast(
+                name +
+                " added successfully."
+            );
+
+
+            roomModal.classList.remove(
+                "show"
+            );
+
+
+            this.reset();
+
+        }
+    );
+
+
+/* =====================================================
+   VIEW ROOM
+===================================================== */
+
+function viewRoom(roomName) {
+
+    showToast(
+        "Opening " +
+        roomName +
+        " details..."
+    );
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function () {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        2500
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS WHEN CLICKING OUTSIDE
+===================================================== */
+
+window.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target ===
+            deviceModal
+        ) {
+
+            deviceModal.classList.remove(
+                "show"
+            );
+
+        }
+
+
+        if (
+            event.target ===
+            roomModal
+        ) {
+
+            roomModal.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

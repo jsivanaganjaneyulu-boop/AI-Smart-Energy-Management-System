@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Alerts | Smart Energy Management System</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7f8;
+    color: #071b2c;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+    height: 72px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+
+    background: #087b47;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px;
+}
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+
+.menu {
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+.logo {
+    width: 42px;
+    height: 42px;
+
+    border: 2px solid #8cff52;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+
+.system-name {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+
+.admin {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.notification {
+    font-size: 21px;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    position: fixed;
+
+    top: 72px;
+    left: 0;
+    bottom: 0;
+
+    width: 248px;
+
+    background: #031d2a;
+
+    color: white;
+
+    padding-top: 25px;
+
+    z-index: 900;
+}
+
+
+.nav-item {
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding-left: 25px;
+
+    color: #dbe5e9;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+
+.nav-item:hover {
+    background: #063346;
+}
+
+
+.nav-item.active {
+    background: #08a85c;
+
+    color: white;
+
+    border-left:
+        4px solid #8cff52;
+}
+
+
+.nav-icon {
+    width: 23px;
+
+    text-align: center;
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.main {
+    margin-left: 248px;
+
+    padding:
+        105px
+        32px
+        40px;
+
+    min-height: 100vh;
+}
+
+
+.page-title {
+    font-size: 36px;
+
+    font-weight: 700;
+
+    margin-bottom: 24px;
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+.tabs {
+    display: flex;
+
+    gap: 40px;
+
+    border-bottom:
+        1px solid #dce2e6;
+
+    margin-bottom: 20px;
+}
+
+
+.tab {
+    border: none;
+
+    background: transparent;
+
+    color: #596777;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    padding:
+        0 5px
+        14px;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+
+.tab.active {
+    color: #078a4e;
+}
+
+
+.tab.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: -1px;
+
+    height: 3px;
+
+    background: #078a4e;
+}
+
+
+/* =====================================================
+   ALERT CARD
+===================================================== */
+
+.alert-card {
+    background: white;
+
+    border:
+        1px solid #dfe5e8;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.04);
+}
+
+
+/* =====================================================
+   ALERT ITEM
+===================================================== */
+
+.alert-item {
+    min-height: 91px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+        16px
+        20px;
+
+    border-bottom:
+        1px solid #e2e7ea;
+
+    transition:
+        background 0.2s;
+}
+
+
+.alert-item:hover {
+    background: #fafcfc;
+}
+
+
+.alert-item:last-child {
+    border-bottom: none;
+}
+
+
+/* =====================================================
+   ALERT ICON
+===================================================== */
+
+.alert-icon {
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    border-radius: 6px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-right: 17px;
+
+    color: white;
+
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+
+.alert-icon.red {
+    background: #f32f2f;
+}
+
+
+.alert-icon.orange {
+    background: #ff7a18;
+}
+
+
+.alert-icon.yellow {
+    background: #f5a900;
+}
+
+
+.alert-icon.blue {
+    background: #2879df;
+}
+
+
+/* =====================================================
+   ALERT CONTENT
+===================================================== */
+
+.alert-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.alert-title {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: #071b2c;
+
+    margin-bottom: 6px;
+}
+
+
+.alert-description {
+    font-size: 13px;
+
+    color: #455667;
+}
+
+
+.alert-time {
+    width: 90px;
+
+    text-align: right;
+
+    color: #263544;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   VIEW ALL
+===================================================== */
+
+.view-all {
+    min-height: 57px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    padding:
+        0 22px;
+
+    color: #078a4e;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+
+.view-all:hover {
+    background: #f5fbf7;
+}
+
+
+.arrow {
+    font-size: 20px;
+
+    margin-left: 8px;
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+.history {
+    display: none;
+}
+
+
+.history .alert-item {
+    opacity: 0.8;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: #687786;
+}
+
+
+.empty-icon {
+    font-size: 45px;
+
+    margin-bottom: 12px;
+}
+
+
+.empty-state h3 {
+    color: #263544;
+
+    margin-bottom: 7px;
+}
+
+
+/* =====================================================
+   ALERT COUNT
+===================================================== */
+
+.alert-count {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 22px;
+    height: 22px;
+
+    padding: 0 6px;
+
+    margin-left: 8px;
+
+    background: #f32f2f;
+
+    color: white;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    background: #071b2c;
+
+    color: white;
+
+    padding:
+        14px 20px;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,0,0,.2);
+
+    transform:
+        translateY(100px);
+
+    opacity: 0;
+
+    transition:
+        all .3s;
+
+    z-index: 2000;
+}
+
+
+.toast.show {
+    transform:
+        translateY(0);
+
+    opacity: 1;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 900px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+    }
+
+}
+
+
+@media(max-width: 700px) {
+
+    .sidebar {
+        transform:
+            translateX(-100%);
+
+        transition: .3s;
+    }
+
+
+    .sidebar.open {
+        transform:
+            translateX(0);
+    }
+
+
+    .main {
+        margin-left: 0;
+
+        padding:
+            100px
+            15px
+            30px;
+    }
+
+
+    .system-name {
+        display: none;
+    }
+
+
+    .page-title {
+        font-size: 30px;
+    }
+
+
+    .alert-item {
+        align-items: flex-start;
+    }
+
+
+    .alert-time {
+        width: auto;
+
+        margin-left: 10px;
+    }
+
+}
+
+
+@media(max-width: 500px) {
+
+    .alert-item {
+        flex-wrap: wrap;
+    }
+
+
+    .alert-content {
+        width:
+            calc(100% - 60px);
+    }
+
+
+    .alert-time {
+        width: 100%;
+
+        text-align: left;
+
+        margin:
+            8px 0 0 59px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div
+            class="menu"
+            id="menuButton"
+        >
+            ☰
+        </div>
+
+
+        <div class="logo">
+            ⚡
+        </div>
+
+
+        <div class="system-name">
+            Smart Energy Management System
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="admin">
+            👤 Admin
+        </div>
+
+        <div class="notification">
+            ♧
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<nav
+    class="sidebar"
+    id="sidebar"
+>
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ⌂
+        </span>
+
+        Dashboard
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ▦
+        </span>
+
+        Rooms & Devices
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ◉
+        </span>
+
+        Data Collection
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ✣
+        </span>
+
+        AI Processing
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item active"
+    >
+
+        <span class="nav-icon">
+            ♢
+        </span>
+
+        Alerts
+
+        <span
+            class="alert-count"
+            id="alertCount"
+        >
+            4
+        </span>
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ▤
+        </span>
+
+        Reports
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ⚙
+        </span>
+
+        Settings
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+            ⇥
+        </span>
+
+        Logout
+
+    </a>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <h1 class="page-title">
+        Alerts
+    </h1>
+
+
+
+    <!-- =================================================
+         TABS
+    ================================================== -->
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            id="activeTab"
+            onclick="showTab('active')"
+        >
+
+            Active Alerts
+
+        </button>
+
+
+        <button
+            class="tab"
+            id="historyTab"
+            onclick="showTab('history')"
+        >
+
+            History
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         ACTIVE ALERTS
+    ================================================== -->
+
+    <section
+        class="alert-card"
+        id="activeAlerts"
+    >
+
+
+        <!-- HIGH POWER -->
+
+        <div
+            class="alert-item"
+            data-alert="high-power"
+        >
+
+            <div
+                class="alert-icon red"
+            >
+                ⚡
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    High Power Consumption
+                </div>
+
+                <div class="alert-description">
+                    Power usage exceeded 1000W in Bedroom
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                10:30 AM
+            </div>
+
+        </div>
+
+
+
+        <!-- UNUSUAL ENERGY -->
+
+        <div
+            class="alert-item"
+            data-alert="unusual-energy"
+        >
+
+            <div
+                class="alert-icon orange"
+            >
+                !
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    Unusual Energy Usage
+                </div>
+
+                <div class="alert-description">
+                    Energy usage is 32% higher than usual
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                09:45 AM
+            </div>
+
+        </div>
+
+
+
+        <!-- DEVICE LEFT ON -->
+
+        <div
+            class="alert-item"
+            data-alert="device-left-on"
+        >
+
+            <div
+                class="alert-icon yellow"
+            >
+                ♧
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    Device Left ON
+                </div>
+
+                <div class="alert-description">
+                    AC in Office has been ON for more than 2 hours
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                09:15 AM
+            </div>
+
+        </div>
+
+
+
+        <!-- PERSON COUNT -->
+
+        <div
+            class="alert-item"
+            data-alert="person-count"
+        >
+
+            <div
+                class="alert-icon blue"
+            >
+                👥
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    High Person Count
+                </div>
+
+                <div class="alert-description">
+                    More than 5 people detected in Conference Room
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                09:00 AM
+            </div>
+
+        </div>
+
+
+
+        <!-- VIEW ALL -->
+
+        <a
+            class="view-all"
+            onclick="viewAllAlerts()"
+        >
+
+            View All Alerts
+
+            <span class="arrow">
+                →
+            </span>
+
+        </a>
+
+    </section>
+
+
+
+    <!-- =================================================
+         HISTORY
+    ================================================== -->
+
+    <section
+        class="alert-card history"
+        id="historyAlerts"
+    >
+
+
+        <div class="alert-item">
+
+            <div
+                class="alert-icon red"
+            >
+                ✓
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    High Power Consumption
+                </div>
+
+                <div class="alert-description">
+                    Power usage exceeded threshold in Bedroom
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                Yesterday
+            </div>
+
+        </div>
+
+
+        <div class="alert-item">
+
+            <div
+                class="alert-icon orange"
+            >
+                ✓
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    Unusual Energy Usage
+                </div>
+
+                <div class="alert-description">
+                    Energy consumption returned to normal
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                Yesterday
+            </div>
+
+        </div>
+
+
+        <div class="alert-item">
+
+            <div
+                class="alert-icon yellow"
+            >
+                ✓
+            </div>
+
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+                    Device Left ON
+                </div>
+
+                <div class="alert-description">
+                    AC in Office was switched OFF
+                </div>
+
+            </div>
+
+
+            <div class="alert-time">
+                23 May
+            </div>
+
+        </div>
+
+
+        <a
+            class="view-all"
+            onclick="viewAllHistory()"
+        >
+
+            View Alert History
+
+            <span class="arrow">
+                →
+            </span>
+
+        </a>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    Alert action completed
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   TAB SWITCHING
+===================================================== */
+
+function showTab(tab) {
+
+    const activeAlerts =
+        document.getElementById(
+            "activeAlerts"
+        );
+
+    const historyAlerts =
+        document.getElementById(
+            "historyAlerts"
+        );
+
+    const activeTab =
+        document.getElementById(
+            "activeTab"
+        );
+
+    const historyTab =
+        document.getElementById(
+            "historyTab"
+        );
+
+
+    if (tab === "active") {
+
+        activeAlerts.style.display =
+            "block";
+
+        historyAlerts.style.display =
+            "none";
+
+        activeTab.classList.add(
+            "active"
+        );
+
+        historyTab.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    if (tab === "history") {
+
+        activeAlerts.style.display =
+            "none";
+
+        historyAlerts.style.display =
+            "block";
+
+        historyTab.classList.add(
+            "active"
+        );
+
+        activeTab.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   VIEW ALL ALERTS
+===================================================== */
+
+function viewAllAlerts() {
+
+    showToast(
+        "Showing all active alerts"
+    );
+
+}
+
+
+/* =====================================================
+   VIEW HISTORY
+===================================================== */
+
+function viewAllHistory() {
+
+    showToast(
+        "Alert history opened"
+    );
+
+}
+
+
+/* =====================================================
+   TOAST MESSAGE
+===================================================== */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        2500
+    );
+
+}
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+document
+    .getElementById(
+        "menuButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById(
+                    "sidebar"
+                )
+                .classList.toggle(
+                    "open"
+                );
+
+        }
+    );
+
+
+/* =====================================================
+   ALERT COUNT
+===================================================== */
+
+function updateAlertCount() {
+
+    const alerts =
+        document.querySelectorAll(
+            "#activeAlerts .alert-item"
+        );
+
+
+    document.getElementById(
+        "alertCount"
+    ).textContent =
+        alerts.length;
+
+}
+
+
+updateAlertCount();
+
+
+/* =====================================================
+   OPTIONAL: AUTO REFRESH TIME
+===================================================== */
+
+function updateAlertTimes() {
+
+    const now =
+        new Date();
+
+
+    const time =
+        now.toLocaleTimeString(
+            "en-IN",
+            {
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+showTab("active");
+
+</script>
+
+</body>
+</html>

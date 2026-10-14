@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Login | Smart Energy Management System
+    </title>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            min-height: 100vh;
+
+            background: #f4f7f6;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #101c2a;
+
+        }
+
+
+        /* =====================================================
+           MAIN LOGIN CONTAINER
+        ===================================================== */
+
+        .login-container {
+
+            width: 96%;
+
+            max-width: 1500px;
+
+            min-height: 720px;
+
+            background: white;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1.08fr;
+
+            box-shadow:
+                0 15px 45px
+                rgba(0, 0, 0, 0.15);
+
+        }
+
+
+        /* =====================================================
+           LEFT SIDE
+        ===================================================== */
+
+        .left-panel {
+
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 45px 60px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #003d2b 0%,
+                    #005d3a 45%,
+                    #006f3e 100%
+                );
+
+        }
+
+
+        /* Background glow */
+
+        .left-panel::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 500px;
+
+            height: 500px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(100, 255, 90, 0.08);
+
+            bottom: -220px;
+
+            left: -100px;
+
+        }
+
+
+        .left-panel::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+
+            height: 300px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(100, 255, 90, 0.06);
+
+            top: 120px;
+
+            right: -140px;
+
+        }
+
+
+        /* =====================================================
+           BRAND
+        ===================================================== */
+
+        .brand {
+
+            position: relative;
+
+            z-index: 5;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin-bottom: 65px;
+
+        }
+
+
+        .brand-logo {
+
+            width: 55px;
+
+            height: 55px;
+
+            border:
+                3px solid #8eea48;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 29px;
+
+            color: #a4ff55;
+
+        }
+
+
+        .brand-text {
+
+            line-height: 1.2;
+
+        }
+
+
+        .brand-title {
+
+            font-size: 23px;
+
+            font-weight: 700;
+
+        }
+
+
+        .brand-subtitle {
+
+            font-size: 18px;
+
+            color: #d5eee2;
+
+        }
+
+
+        /* =====================================================
+           LEFT CONTENT
+        ===================================================== */
+
+        .left-content {
+
+            position: relative;
+
+            z-index: 5;
+
+            max-width: 580px;
+
+        }
+
+
+        .left-content h1 {
+
+            font-size: 52px;
+
+            line-height: 1.08;
+
+            margin-bottom: 25px;
+
+            font-weight: 700;
+
+        }
+
+
+        .green-text {
+
+            color: #8ff04a;
+
+        }
+
+
+        .left-content p {
+
+            font-size: 20px;
+
+            line-height: 1.6;
+
+            color: #e1f2e9;
+
+            max-width: 500px;
+
+        }
+
+
+        /* =====================================================
+           ENERGY ILLUSTRATION
+        ===================================================== */
+
+        .energy-illustration {
+
+            position: absolute;
+
+            bottom: 0;
+
+            left: 0;
+
+            right: 0;
+
+            height: 42%;
+
+            overflow: hidden;
+
+        }
+
+
+        /* City */
+
+        .city {
+
+            position: absolute;
+
+            bottom: 0;
+
+            left: 0;
+
+            right: 0;
+
+            height: 150px;
+
+            opacity: 0.55;
+
+        }
+
+
+        .building {
+
+            position: absolute;
+
+            bottom: 0;
+
+            background:
+                rgba(25, 125, 72, 0.75);
+
+            border:
+                2px solid
+                rgba(140, 220, 80, 0.35);
+
+        }
+
+
+        .building:nth-child(1) {
+
+            left: 3%;
+
+            width: 55px;
+
+            height: 110px;
+
+        }
+
+
+        .building:nth-child(2) {
+
+            left: 10%;
+
+            width: 75px;
+
+            height: 75px;
+
+        }
+
+
+        .building:nth-child(3) {
+
+            left: 20%;
+
+            width: 60px;
+
+            height: 125px;
+
+        }
+
+
+        .building:nth-child(4) {
+
+            left: 30%;
+
+            width: 85px;
+
+            height: 95px;
+
+        }
+
+
+        .building:nth-child(5) {
+
+            left: 43%;
+
+            width: 65px;
+
+            height: 135px;
+
+        }
+
+
+        .building:nth-child(6) {
+
+            left: 55%;
+
+            width: 95px;
+
+            height: 105px;
+
+        }
+
+
+        .building:nth-child(7) {
+
+            left: 70%;
+
+            width: 60px;
+
+            height: 125px;
+
+        }
+
+
+        .building:nth-child(8) {
+
+            left: 82%;
+
+            width: 100px;
+
+            height: 80px;
+
+        }
+
+
+        /* Windows */
+
+        .building::after {
+
+            content: "";
+
+            position: absolute;
+
+            top: 15px;
+
+            left: 12px;
+
+            right: 12px;
+
+            bottom: 12px;
+
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(155,255,100,.35) 0 8px,
+                    transparent 8px 18px
+                );
+
+            opacity: .45;
+
+        }
+
+
+        /* House */
+
+        .house {
+
+            position: absolute;
+
+            z-index: 4;
+
+            bottom: 25px;
+
+            left: 37%;
+
+            width: 290px;
+
+            height: 150px;
+
+            background:
+                #164e38;
+
+            border:
+                4px solid
+                #0d3d2b;
+
+        }
+
+
+        .roof {
+
+            position: absolute;
+
+            left: -35px;
+
+            top: -75px;
+
+            width: 360px;
+
+            height: 160px;
+
+            background:
+                #0a3528;
+
+            transform:
+                rotate(45deg)
+                skew(-10deg);
+
+            border:
+                5px solid
+                #174c35;
+
+        }
+
+
+        /* Solar panels */
+
+        .solar {
+
+            position: absolute;
+
+            z-index: 6;
+
+            top: 28px;
+
+            left: 25px;
+
+            width: 235px;
+
+            height: 85px;
+
+            transform:
+                skew(-18deg);
+
+            background:
+
+                repeating-linear-gradient(
+                    90deg,
+                    #1b5261 0 32px,
+                    #76c5b4 32px 34px
+                );
+
+            border:
+                3px solid
+                #9ae8bd;
+
+            box-shadow:
+                0 0 20px
+                rgba(100,255,130,.2);
+
+        }
+
+
+        /* Door */
+
+        .door {
+
+            position: absolute;
+
+            bottom: 0;
+
+            right: 28px;
+
+            width: 45px;
+
+            height: 80px;
+
+            background:
+                #0a3328;
+
+            border:
+                2px solid
+                #7ddf6c;
+
+        }
+
+
+        .door::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 6px;
+
+            height: 6px;
+
+            background: #b5ff6c;
+
+            border-radius: 50%;
+
+            right: 7px;
+
+            top: 40px;
+
+        }
+
+
+        /* Trees */
+
+        .tree {
+
+            position: absolute;
+
+            bottom: 10px;
+
+            width: 75px;
+
+            height: 115px;
+
+            z-index: 5;
+
+        }
+
+
+        .tree::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 22px;
+
+            height: 75px;
+
+            bottom: 0;
+
+            left: 27px;
+
+            background:
+                #193e2d;
+
+        }
+
+
+        .tree::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 75px;
+
+            height: 75px;
+
+            border-radius: 50%;
+
+            top: 0;
+
+            background:
+                #247344;
+
+            box-shadow:
+                35px 20px 0 #1d663c,
+                -25px 25px 0 #1b6339;
+
+        }
+
+
+        .tree-1 {
+
+            left: 7%;
+
+        }
+
+
+        .tree-2 {
+
+            right: 9%;
+
+            transform: scale(1.2);
+
+        }
+
+
+        /* Wind turbine */
+
+        .wind-turbine {
+
+            position: absolute;
+
+            z-index: 5;
+
+            bottom: 125px;
+
+            left: 18%;
+
+            width: 8px;
+
+            height: 190px;
+
+            background:
+                #83d94d;
+
+        }
+
+
+        .turbine-head {
+
+            position: absolute;
+
+            width: 18px;
+
+            height: 18px;
+
+            border-radius: 50%;
+
+            background:
+                #a0ee50;
+
+            left: -5px;
+
+            top: -10px;
+
+        }
+
+
+        .blade {
+
+            position: absolute;
+
+            width: 8px;
+
+            height: 80px;
+
+            background:
+                #8ee44e;
+
+            left: 5px;
+
+            top: -70px;
+
+            transform-origin:
+                50% 100%;
+
+            border-radius:
+                100% 100% 0 0;
+
+        }
+
+
+        .blade.one {
+
+            transform:
+                rotate(0deg);
+
+        }
+
+
+        .blade.two {
+
+            transform:
+                rotate(120deg);
+
+        }
+
+
+        .blade.three {
+
+            transform:
+                rotate(240deg);
+
+        }
+
+
+        /* =====================================================
+           RIGHT SIDE
+        ===================================================== */
+
+        .right-panel {
+
+            padding:
+                80px 95px 50px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+        }
+
+
+        .login-content {
+
+            width: 100%;
+
+            max-width: 570px;
+
+            margin: auto;
+
+        }
+
+
+        .welcome {
+
+            text-align: center;
+
+            margin-bottom: 45px;
+
+        }
+
+
+        .welcome h2 {
+
+            font-size: 42px;
+
+            margin-bottom: 12px;
+
+            color: #101c2a;
+
+        }
+
+
+        .welcome p {
+
+            color: #6b7786;
+
+            font-size: 20px;
+
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-group {
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .form-label {
+
+            display: block;
+
+            font-size: 17px;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 20px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            font-size: 22px;
+
+            color: #657384;
+
+            pointer-events: none;
+
+        }
+
+
+        .form-input {
+
+            width: 100%;
+
+            height: 66px;
+
+            border:
+                1px solid #d2d8df;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            padding:
+                0 55px;
+
+            font-size: 17px;
+
+            color: #172536;
+
+            transition: .25s;
+
+            background: white;
+
+        }
+
+
+        .form-input:focus {
+
+            border-color:
+                #07864d;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(7,134,77,.10);
+
+        }
+
+
+        .form-input::placeholder {
+
+            color: #8b96a4;
+
+        }
+
+
+        .password-toggle {
+
+            position: absolute;
+
+            right: 20px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            border: none;
+
+            background: none;
+
+            cursor: pointer;
+
+            font-size: 21px;
+
+            color: #637080;
+
+        }
+
+
+        /* =====================================================
+           OPTIONS
+        ===================================================== */
+
+        .form-options {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-top: -8px;
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .remember {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 16px;
+
+            color: #273342;
+
+            cursor: pointer;
+
+        }
+
+
+        .remember input {
+
+            width: 20px;
+
+            height: 20px;
+
+            accent-color:
+                #07864d;
+
+            cursor: pointer;
+
+        }
+
+
+        .forgot {
+
+            color:
+                #087d4a;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+        }
+
+
+        .forgot:hover {
+
+            text-decoration:
+                underline;
+
+        }
+
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
+
+        .login-button {
+
+            width: 100%;
+
+            height: 66px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #07864d,
+                    #15945a
+                );
+
+            color: white;
+
+            font-size: 19px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .25s;
+
+            box-shadow:
+                0 5px 15px
+                rgba(7,134,77,.18);
+
+        }
+
+
+        .login-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(7,134,77,.25);
+
+        }
+
+
+        .login-button:active {
+
+            transform:
+                translateY(0);
+
+        }
+
+
+        .login-button.loading {
+
+            opacity: .75;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
+           DIVIDER
+        ===================================================== */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin: 28px 0;
+
+            color: #737d89;
+
+            font-size: 16px;
+
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            height: 1px;
+
+            background:
+                #dce1e5;
+
+            flex: 1;
+
+        }
+
+
+        /* =====================================================
+           CREATE ACCOUNT
+        ===================================================== */
+
+        .create-button {
+
+            width: 100%;
+
+            height: 66px;
+
+            border:
+                1.5px solid
+                #188c59;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color:
+                #087d4a;
+
+            font-size: 18px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            transition: .25s;
+
+        }
+
+
+        .create-button:hover {
+
+            background:
+                #f0faf5;
+
+        }
+
+
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
+
+        .message {
+
+            min-height: 25px;
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+        }
+
+
+        .message.error {
+
+            color: #d32f2f;
+
+        }
+
+
+        .message.success {
+
+            color: #07864d;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 45px;
+
+            color: #697582;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .login-container {
+
+                grid-template-columns: 1fr;
+
+                max-width: 700px;
+
+            }
+
+
+            .left-panel {
+
+                min-height: 430px;
+
+            }
+
+
+            .energy-illustration {
+
+                height: 40%;
+
+            }
+
+
+            .right-panel {
+
+                padding:
+                    55px 70px;
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            body {
+
+                padding: 10px;
+
+            }
+
+
+            .login-container {
+
+                width: 100%;
+
+                border-radius: 14px;
+
+            }
+
+
+            .left-panel {
+
+                padding:
+                    30px;
+
+                min-height: 400px;
+
+            }
+
+
+            .brand {
+
+                margin-bottom: 35px;
+
+            }
+
+
+            .brand-title {
+
+                font-size: 18px;
+
+            }
+
+
+            .brand-subtitle {
+
+                font-size: 14px;
+
+            }
+
+
+            .left-content h1 {
+
+                font-size: 35px;
+
+            }
+
+
+            .left-content p {
+
+                font-size: 16px;
+
+            }
+
+
+            .house {
+
+                left: 30%;
+
+                transform: scale(.75);
+
+                transform-origin:
+                    bottom center;
+
+            }
+
+
+            .right-panel {
+
+                padding:
+                    45px 25px;
+
+            }
+
+
+            .welcome h2 {
+
+                font-size: 32px;
+
+            }
+
+
+            .welcome p {
+
+                font-size: 17px;
+
+            }
+
+
+            .form-options {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOGIN CONTAINER
+===================================================== -->
+
+<div class="login-container">
+
+
+    <!-- =================================================
+         LEFT PANEL
+    ================================================= -->
+
+    <section class="left-panel">
+
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ⚡
+            </div>
+
+            <div class="brand-text">
+
+                <div class="brand-title">
+                    Smart Energy
+                </div>
+
+                <div class="brand-subtitle">
+                    Management System
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT -->
+
+        <div class="left-content">
+
+            <h1>
+
+                AI Based
+
+                <br>
+
+                <span class="green-text">
+                    Smart Energy
+                </span>
+
+                <br>
+
+                Management System
+
+            </h1>
+
+
+            <p>
+
+                Monitor, Analyze and Optimize
+                <br>
+                Your Energy Usage
+
+            </p>
+
+        </div>
+
+
+        <!-- ENERGY ILLUSTRATION -->
+
+        <div class="energy-illustration">
+
+
+            <!-- Wind Turbine -->
+
+            <div class="wind-turbine">
+
+                <div class="turbine-head">
+
+                    <div class="blade one"></div>
+                    <div class="blade two"></div>
+                    <div class="blade three"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Trees -->
+
+            <div class="tree tree-1"></div>
+
+            <div class="tree tree-2"></div>
+
+
+            <!-- House -->
+
+            <div class="house">
+
+                <div class="roof"></div>
+
+                <div class="solar"></div>
+
+                <div class="door"></div>
+
+            </div>
+
+
+            <!-- City -->
+
+            <div class="city">
+
+                <div class="building"></div>
+                <div class="building"></div>
+                <div class="building"></div>
+                <div class="building"></div>
+                <div class="building"></div>
+                <div class="building"></div>
+                <div class="building"></div>
+                <div class="building"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         RIGHT PANEL
+    ================================================= -->
+
+    <section class="right-panel">
+
+
+        <div class="login-content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <h2>
+                    Welcome Back!
+                </h2>
+
+                <p>
+                    Login to your account
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================= -->
+
+            <form
+                id="loginForm"
+                autocomplete="on"
+            >
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="email"
+                    >
+                        Email
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-input"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="password"
+                    >
+                        Password
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- OPTIONS -->
+
+                <div class="form-options">
+
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        class="forgot"
+                        id="forgotPassword"
+                    >
+                        Forgot Password?
+                    </a>
+
+
+                </div>
+
+
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                    id="loginButton"
+                >
+                    Login →
+                </button>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                    class="message"
+                    id="message"
+                ></div>
+
+
+            </form>
+
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+
+
+            <!-- CREATE ACCOUNT -->
+
+            <button
+                type="button"
+                class="create-button"
+                id="createAccount"
+            >
+
+                <span>
+                    👤
+                </span>
+
+                Create New Account
+
+            </button>
+
+
+
+            <!-- FOOTER -->
+
+            <div class="footer">
+
+                © 2026 Smart Energy Management System.
+                All rights reserved.
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const togglePassword =
+    document.getElementById(
+        "togglePassword"
+    );
+
+
+const rememberMe =
+    document.getElementById(
+        "rememberMe"
+    );
+
+
+/* =====================================================
+   SHOW / HIDE PASSWORD
+===================================================== */
+
+togglePassword.addEventListener(
+    "click",
+    function () {
+
+        if (
+            passwordInput.type ===
+            "password"
+        ) {
+
+            passwordInput.type =
+                "text";
+
+            togglePassword.textContent =
+                "🙈";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                "Hide password"
+            );
+
+        } else {
+
+            passwordInput.type =
+                "password";
+
+            togglePassword.textContent =
+                "👁";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                "Show password"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   REMEMBER ME
+===================================================== */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const savedEmail =
+            localStorage.getItem(
+                "smartEnergyEmail"
+            );
+
+
+        if (savedEmail) {
+
+            emailInput.value =
+                savedEmail;
+
+            rememberMe.checked =
+                true;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginForm.addEventListener(
+    "submit",
+    function (event) {
+
+        event.preventDefault();
+
+
+        const email =
+            emailInput.value.trim();
+
+
+        const password =
+            passwordInput.value.trim();
+
+
+        /* Clear old message */
+
+        message.textContent = "";
+
+        message.className =
+            "message";
+
+
+        /* Validate email */
+
+        if (email === "") {
+
+            showError(
+                "Please enter your email address."
+            );
+
+            emailInput.focus();
+
+            return;
+
+        }
+
+
+        /* Validate email format */
+
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+        if (
+            !emailPattern.test(email)
+        ) {
+
+            showError(
+                "Please enter a valid email address."
+            );
+
+            emailInput.focus();
+
+            return;
+
+        }
+
+
+        /* Validate password */
+
+        if (password === "") {
+
+            showError(
+                "Please enter your password."
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+
+        if (password.length < 6) {
+
+            showError(
+                "Password must contain at least 6 characters."
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+
+        /* Remember email */
+
+        if (
+            rememberMe.checked
+        ) {
+
+            localStorage.setItem(
+                "smartEnergyEmail",
+                email
+            );
+
+        } else {
+
+            localStorage.removeItem(
+                "smartEnergyEmail"
+            );
+
+        }
+
+
+        /* CHECK REGISTERED USER */
+
+        const users =
+            JSON.parse(
+                localStorage.getItem(
+                    "smartEnergyUsers"
+                ) || "[]"
+            );
+
+
+        const registeredUser =
+            users.find(
+                function (user) {
+
+                    return (
+                        user.email.toLowerCase() ===
+                            email.toLowerCase() &&
+
+                        user.password ===
+                            password
+                    );
+
+                }
+            );
+
+
+        /* INVALID LOGIN */
+
+        if (!registeredUser) {
+
+            showError(
+                "Invalid email or password. Please create an account or try again."
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+
+        /* SAVE LOGGED-IN USER */
+
+        localStorage.setItem(
+            "smartEnergyCurrentUser",
+            JSON.stringify({
+                fullName:
+                    registeredUser.fullName,
+
+                email:
+                    registeredUser.email
+            })
+        );
+
+
+        /* LOGIN LOADING STATE */
+
+        loginButton.classList.add(
+            "loading"
+        );
+
+        loginButton.textContent =
+            "Logging in...";
+
+
+        setTimeout(
+            function () {
+
+                showSuccess(
+                    "Login successful! Opening dashboard..."
+                );
+
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    },
+                    800
+                );
+
+            },
+            700
+        );
+
+    }
+);
+
+
+/* =====================================================
+   ERROR MESSAGE
+===================================================== */
+
+function showError(text) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message error";
+
+}
+
+
+/* =====================================================
+   SUCCESS MESSAGE
+===================================================== */
+
+function showSuccess(text) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message success";
+
+}
+
+
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+document
+    .getElementById(
+        "forgotPassword"
+    )
+    .addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            alert(
+                "Password reset functionality will be connected to the backend."
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   CREATE ACCOUNT
+===================================================== */
+
+document
+    .getElementById(
+        "createAccount"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            window.location.href =
+                "register.html";
+
+        }
+    );
+
+
+/* =====================================================
+   ENTER KEY SUPPORT
+===================================================== */
+
+passwordInput.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            loginForm.requestSubmit();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
